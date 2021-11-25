@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">纯记账</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">用户名</string>
+    <string name="nav_header_subtitle">邮箱</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">设置</string>
+
+    <string name="menu_home">首页</string>
+    <string name="menu_history">历史查看</string>
+    <string name="menu_analysis">分析统计</string>
+</resources>
