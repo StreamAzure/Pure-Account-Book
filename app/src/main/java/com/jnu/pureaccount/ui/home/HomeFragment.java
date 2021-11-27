@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -19,18 +18,23 @@ import com.jnu.pureaccount.data.AccountItem;
 import com.jnu.pureaccount.data.DayTotalItem;
 import com.jnu.pureaccount.data.HomeItem;
 import com.jnu.pureaccount.data.MonthTotalItem;
-import com.jnu.pureaccount.databinding.FragmentHomeBinding;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Calendar;
+import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class HomeFragment extends Fragment {
 
     private RecyclerView recyclerView;
-    List<HomeItem> mHomeItemList;
     HomeItemAdapter mAdapter;
-
+    TreeMap<String,List<HomeItem>> listTreeMap;
+    //先用一个Map进行管理，若干个日期为键，一个日期对应一组列表，每组列表以一个DayTotalItem开头
+    List<HomeItem> mHomeItemList;
+    //传入Adapter的数据源
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -47,11 +51,55 @@ public class HomeFragment extends Fragment {
     }
 
     private void initData() {
+//        listTreeMap = new TreeMap<String,List<HomeItem>>(new Comparator<String>() {
+//            @Override
+//            public int compare(String o1, String o2) {
+//                return o2.compareTo(o1);
+//            }
+//        });
+
+        listTreeMap = new TreeMap<>();
+        //虽然不知道为什么，用默认排序就对了
+
+        List<HomeItem> accountItemList1 = new ArrayList<>();
+        List<HomeItem> accountItemList2 = new ArrayList<>();
+        //测试时注意！！一个List里的所有Item的日期是相同的！！
+
+        accountItemList1.add(new AccountItem(R.drawable.ic_expend_present,1,50,true,2021,11,27));
+        accountItemList1.add(new AccountItem(R.drawable.ic_expend_rent,2,60,true,2021,11,27));
+        accountItemList2.add(new AccountItem(R.drawable.ic_expend_snacks,3,70,true,2020,1,1));
+        accountItemList2.add((new AccountItem(R.drawable.ic_expend_medicine,4,80,true,2020,1,1)));
+
+        String date1 = ((AccountItem)accountItemList1.get(0)).getTagDate();
+        String date2 = ((AccountItem)accountItemList2.get(0)).getTagDate();
+        listTreeMap.put(date2,accountItemList1);
+        listTreeMap.put(date1,accountItemList2);
+
+        arrangeData(listTreeMap);
+
+    }
+
+    private void arrangeData(TreeMap<String, List<HomeItem>> treeMap){
+        //重整为要传入Adapter的数据源mHomeItemList
         mHomeItemList = new ArrayList<>();
-        mHomeItemList.add(new AccountItem(R.drawable.ic_menu_camera,1,1,true,new Date()));
-        Log.e("MYTAG",Integer.toString(((AccountItem)mHomeItemList.get(0)).getReason()));
-        mHomeItemList.add(new AccountItem(R.drawable.ic_launcher_foreground,2,2,true,new Date()));
-        Log.e("MYTAG",Integer.toString(((AccountItem)mHomeItemList.get(1)).getReason()));
+        Iterator<Map.Entry<String,List<HomeItem>>> it = treeMap.entrySet().iterator();
+        while(it.hasNext()){
+            Map.Entry<String,List<HomeItem>> entry = it.next();
+            List<HomeItem> homeItems = entry.getValue();
+            //获取对应的homeItem列表
+            Calendar calendar = ((AccountItem)homeItems.get(0)).getDate();
+            DayTotalItem dayTotalItem = new DayTotalItem(calendar,100,100);
+            mHomeItemList.add(dayTotalItem);
+            //加入对应日期Item
+            for(int i = 0 ;i < homeItems.size();i++){
+                mHomeItemList.add(homeItems.get(i));
+            }
+        }
+
+        //debug
+        for(int i = 0;i < mHomeItemList.size();i++){
+            Log.e("MYTAG",mHomeItemList.get(i)+"");
+        }
     }
 
     @Override
@@ -64,21 +112,21 @@ public class HomeFragment extends Fragment {
         private static final int VIEW_TYPE_MONTH_TOTAL_ITEM = 2;
         private static final int VIEW_TYPE_DAY_TOTAL_ITEM = 3;
 
-        private final List<HomeItem> adpHomeItemList;
+        private final List<HomeItem> adpList;
 
-        public HomeItemAdapter(List<HomeItem> adpHomeItemList) {
-            this.adpHomeItemList = adpHomeItemList;
+        public HomeItemAdapter(List<HomeItem> adpList) {
+            this.adpList = adpList;
         }
 
         @Override
         public int getItemViewType(int position){
-            if(mHomeItemList.get(position) instanceof AccountItem){
+            if(adpList.get(position) instanceof AccountItem){
                 return VIEW_TYPE_ACCOUNT_ITEM;
             }
-            else if(mHomeItemList.get(position) instanceof MonthTotalItem){
+            else if(adpList.get(position) instanceof MonthTotalItem){
                 return VIEW_TYPE_MONTH_TOTAL_ITEM;
             }
-            else if(mHomeItemList.get(position) instanceof DayTotalItem){
+            else if(adpList.get(position) instanceof DayTotalItem){
                 return VIEW_TYPE_DAY_TOTAL_ITEM;
             }
             else return VIEW_TYPE_ACCOUNT_ITEM;
@@ -113,7 +161,7 @@ public class HomeFragment extends Fragment {
         public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
             if(holder instanceof AccountItemHolder){
                 AccountItemHolder viewHolder = (AccountItemHolder) holder;
-                AccountItem accountItem = (AccountItem) mHomeItemList.get(position);
+                AccountItem accountItem = (AccountItem) adpList.get(position);
                 viewHolder.icon.setBackgroundResource(accountItem.getIcon());
                 viewHolder.reason.setText(accountItem.getReason()+"");
                 viewHolder.account.setText(accountItem.getAccount()+"");
@@ -124,7 +172,10 @@ public class HomeFragment extends Fragment {
             }
             else if(holder instanceof DayTotalItemHolder){
                 DayTotalItemHolder viewHolder = (DayTotalItemHolder) holder;
-                //TODO
+                DayTotalItem dayTotalItem = (DayTotalItem) adpList.get(position);
+                viewHolder.date.setText(dayTotalItem.getPrintDate());
+                viewHolder.expend.setText(dayTotalItem.getExpendSubTotal()+"");
+                viewHolder.income.setText(dayTotalItem.getIncomeSubTotal()+"");
             }
         }
 
@@ -134,20 +185,32 @@ public class HomeFragment extends Fragment {
         }
 
         class AccountItemHolder extends RecyclerView.ViewHolder{
+            ImageView icon;
+            TextView account;
+            TextView reason;
             public AccountItemHolder(@NonNull View itemView) {
                 super(itemView);
+                icon = itemView.findViewById(R.id.iv_item_account_icon);
+                account = itemView.findViewById(R.id.tv_item_account_account);
+                reason = itemView.findViewById(R.id.tv_item_account_reason);
+                Log.e("MYTAG","调用AccountItemHolder");
             }
-            private ImageView icon = itemView.findViewById(R.id.iv_item_account_icon);
-            private TextView account = itemView.findViewById(R.id.tv_item_account_account);
-            private TextView reason = itemView.findViewById(R.id.tv_item_account_reason);
         }
         class DayTotalItemHolder extends RecyclerView.ViewHolder{
+            TextView date;
+            TextView income;
+            TextView expend;
             public DayTotalItemHolder(@NonNull View itemView) {
                 super(itemView);
+                date = itemView.findViewById(R.id.tv_item_daytotal_date);
+                income = itemView.findViewById(R.id.tv_item_daytotal_income);
+                expend = itemView.findViewById(R.id.tv_item_daytotal_expend);
+                Log.e("MYTAG","调用DayTotalItemHolder");
             }
-            //TODO
+
         }
         class MonthTotalItemHolder extends RecyclerView.ViewHolder{
+
             public MonthTotalItemHolder(@NonNull View itemView) {
                 super(itemView);
             }

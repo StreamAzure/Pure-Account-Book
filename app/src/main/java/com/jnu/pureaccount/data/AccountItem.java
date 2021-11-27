@@ -1,4 +1,6 @@
 package com.jnu.pureaccount.data;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 public class AccountItem extends HomeItem {
@@ -6,17 +8,17 @@ public class AccountItem extends HomeItem {
     private int reason;
     private int account;
     private boolean type; //0支出 1收入
-    private Date date;
+    private Calendar date;
 
 
-    public AccountItem(int icon,int reason, int account, boolean type, Date date) {
+    public AccountItem(int icon, int reason, int account, boolean type, int year,int month,int date) {
         this.icon = icon;
         this.reason = reason;
         this.account = account;
         this.type = type;
-        this.date = date;
+        this.date = Calendar.getInstance();
+        this.date.set(year, month, date);
     }
-
 
     public int getIcon() {
         return icon;
@@ -39,5 +41,18 @@ public class AccountItem extends HomeItem {
 
     public void setReason(int reason){
         this.reason = reason;
+    }
+
+    public String getTagDate(){
+        //获取用于作标签的年月日字符串
+        String date;
+        Calendar calendar = this.date;
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        date = simpleDateFormat.format(calendar.getTime());
+        return date;
+    }
+
+    public Calendar getDate(){
+        return this.date;
     }
 }

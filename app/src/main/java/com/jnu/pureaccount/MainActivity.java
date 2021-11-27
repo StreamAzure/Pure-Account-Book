@@ -1,20 +1,26 @@
 package com.jnu.pureaccount;
 
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
+import com.jnu.pureaccount.ui.analysis.AnalysisFragment;
 import com.jnu.pureaccount.ui.history.HistoryFragment;
 import com.jnu.pureaccount.ui.home.HomeFragment;
+import com.jnu.pureaccount.utils.AndroidBarUtils;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -30,21 +36,44 @@ public class MainActivity extends AppCompatActivity {
     private NavigationView navigationView;
     private HomeFragment homeFragment;
     private HistoryFragment historyFragment;
+    private AnalysisFragment analysisFragment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS); //布局延伸
+        AndroidBarUtils.setBarDarkMode(this,true); //状态栏文字图标颜色为黑色
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar); //要有这个才会直接显示应用标题而无需设置
+
         drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
+
+        homeFragment = new HomeFragment();
+        initFragment(homeFragment);
+
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 if (item.getItemId() == R.id.nav_home) {
-                    initHomeFragment();
+                    if(homeFragment == null) {
+                        homeFragment = new HomeFragment();
+                    }
+                    initFragment(homeFragment);
                 }
-                if (item.getItemId()==R.id.nav_history){
-                   initHistoryFragment();
+                else if (item.getItemId()==R.id.nav_history){
+                    if(historyFragment == null) {
+                        historyFragment = new HistoryFragment();
+                    }
+                    initFragment(historyFragment);
+                }
+                else if(item.getItemId() == R.id.nav_analysis){
+                    if(analysisFragment == null) {
+                        analysisFragment = new AnalysisFragment();
+                    }
+                    initFragment(analysisFragment);
                 }
                 //向左收回抽屉
                 drawerLayout.closeDrawer(Gravity.LEFT);
@@ -53,19 +82,11 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void initHistoryFragment() {
-        historyFragment = new HistoryFragment();
+    private void initFragment(Fragment fragment){
         FragmentManager fragmentManager = this.getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.fragment_container,historyFragment);
+        fragmentTransaction.replace(R.id.fragment_container,fragment);
         fragmentTransaction.commit();
     }
 
-    private void initHomeFragment(){
-        homeFragment = new HomeFragment();
-        FragmentManager fragmentManager = this.getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.fragment_container,homeFragment);
-        fragmentTransaction.commit();
-    }
 }

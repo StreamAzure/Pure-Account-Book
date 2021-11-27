@@ -1,6 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="40dp"
+    android:orientation="horizontal"
+    android:paddingHorizontal="20dp"
+    android:paddingTop="20dp"
+    android:layout_marginHorizontal="8dp"
+    android:background="@color/background">
+
+    <TextView
+        android:id="@+id/tv_item_daytotal_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="2019.1.1"
+        android:textColor="@color/gray"
+        android:textSize="13dp"
+        android:layout_weight="6"
+        />
+    <TextView
+        android:id="@+id/tv_item_daytotal_income"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="收入3424"
+        android:textColor="@color/gray"
+        android:textSize="13dp"
+        android:layout_weight="2"
+        android:gravity="end"/>
+    <TextView
+        android:id="@+id/tv_item_daytotal_expend"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="支出23423"
+        android:textColor="@color/gray"
+        android:textSize="13dp"
+        android:layout_weight="2"
+        android:gravity="end"/>
 
 </androidx.appcompat.widget.LinearLayoutCompat>
