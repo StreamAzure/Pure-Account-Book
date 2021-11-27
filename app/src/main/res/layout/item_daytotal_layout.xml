@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="40dp"
+    android:layout_height="30dp"
     android:orientation="horizontal"
     android:paddingHorizontal="20dp"
-    android:paddingTop="20dp"
     android:layout_marginHorizontal="8dp"
-    android:background="@color/background">
+    android:background="@color/background"
+    android:gravity="center_vertical">
 
     <TextView
         android:id="@+id/tv_item_daytotal_date"
