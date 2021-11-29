@@ -1,5 +1,6 @@
 package com.jnu.pureaccount.ui.home;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -8,16 +9,25 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.jnu.pureaccount.MainActivity;
 import com.jnu.pureaccount.R;
 import com.jnu.pureaccount.data.AccountItem;
 import com.jnu.pureaccount.data.DayTotalItem;
 import com.jnu.pureaccount.data.HomeItem;
 import com.jnu.pureaccount.data.MonthTotalItem;
+import com.jnu.pureaccount.event.AddItemActivity;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -28,8 +38,10 @@ import java.util.Map;
 import java.util.TreeMap;
 
 public class HomeFragment extends Fragment {
-
+    private static final int RESULT_CODE_ADD_OK = 200;
+    private ActivityResultLauncher<Intent> AddActivityResultLauncher;
     private RecyclerView recyclerView;
+
     HomeItemAdapter mAdapter;
     TreeMap<String,List<HomeItem>> listTreeMap;
     //先用一个Map进行管理，若干个日期为键，一个日期对应一组列表，每组列表以一个DayTotalItem开头
@@ -40,14 +52,53 @@ public class HomeFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
         initData();//初始化mHomeItemList
         View rootView = inflater.inflate(R.layout.fragment_home,container,false);
+
+        initActivityLauncher();
+        initFloatingActionButton(rootView);
+        initRecyclerView(rootView);
+        initToolBar(rootView);
+
+        return rootView;
+    }
+
+    private void initToolBar(View view){
+        Toolbar toolbar = view.findViewById(R.id.toolbar);
+        //在Fragment中用这个方法的写法：
+        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar); //要有这个才会直接显示应用标题而无需设置
+    }
+
+    private void initRecyclerView(View view){
         //RecyclerView设置
-        recyclerView = rootView.findViewById(R.id.recycler_view_item);
+        recyclerView = view.findViewById(R.id.recycler_view_item);
         LinearLayoutManager layoutManager = new LinearLayoutManager(HomeFragment.this.getContext());
         recyclerView.setLayoutManager(layoutManager);
         mAdapter = new HomeItemAdapter(mHomeItemList);
         recyclerView.setAdapter(mAdapter);
+    }
 
-        return rootView;
+    //初始化浮动按钮
+    private void initFloatingActionButton(View view) {
+        FloatingActionButton fab = view.findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(HomeFragment.this.getActivity(), AddItemActivity.class);
+                AddActivityResultLauncher.launch(intent);
+            }
+        });
+    }
+
+    //注册ActivityLauncher及接收回传数据
+    private void initActivityLauncher(){
+        AddActivityResultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+                    @Override
+                    public void onActivityResult(ActivityResult result) {
+                        if (result.getResultCode() == RESULT_CODE_ADD_OK) {
+
+                        }
+                    }
+                });
     }
 
     private void initData() {

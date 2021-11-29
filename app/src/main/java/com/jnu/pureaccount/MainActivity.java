@@ -1,5 +1,6 @@
 package com.jnu.pureaccount;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -12,13 +13,19 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
+import com.jnu.pureaccount.event.AddItemActivity;
 import com.jnu.pureaccount.ui.analysis.AnalysisFragment;
 import com.jnu.pureaccount.ui.history.HistoryFragment;
 import com.jnu.pureaccount.ui.home.HomeFragment;
 import com.jnu.pureaccount.utils.AndroidBarUtils;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
@@ -32,11 +39,13 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
+
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
     private HomeFragment homeFragment;
     private HistoryFragment historyFragment;
     private AnalysisFragment analysisFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,12 +54,14 @@ public class MainActivity extends AppCompatActivity {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS); //布局延伸
         AndroidBarUtils.setBarDarkMode(this,true); //状态栏文字图标颜色为黑色
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar); //要有这个才会直接显示应用标题而无需设置
+        bindView();
+    }
 
+    private void bindView(){
         drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
 
+        //初始Fragment就是HomeFragment
         homeFragment = new HomeFragment();
         initFragment(homeFragment);
 
@@ -82,11 +93,11 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    //侧滑菜单的按钮切换Fragment
     private void initFragment(Fragment fragment){
         FragmentManager fragmentManager = this.getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.fragment_container,fragment);
         fragmentTransaction.commit();
     }
-
 }

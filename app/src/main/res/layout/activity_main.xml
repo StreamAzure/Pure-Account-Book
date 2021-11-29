@@ -9,27 +9,11 @@
     android:background="@color/background"
     tools:openDrawer="start">
 
-    <LinearLayout
+    <FrameLayout
+        android:id="@+id/fragment_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:elevation="4dp"
-            android:theme="@style/ThemeOverlay.AppCompat.ActionBar">
-
-        </androidx.appcompat.widget.Toolbar>
-
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/fragment_container"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"></androidx.constraintlayout.widget.ConstraintLayout>
-
-    </LinearLayout>
+        android:layout_height="match_parent">
+    </FrameLayout>
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/nav_view"
