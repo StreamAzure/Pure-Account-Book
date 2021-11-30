@@ -3,6 +3,7 @@ package com.jnu.pureaccount.ui.home;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +17,12 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.AppBarConfiguration;
+import androidx.navigation.ui.NavigationUI;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -56,15 +62,7 @@ public class HomeFragment extends Fragment {
         initActivityLauncher();
         initFloatingActionButton(rootView);
         initRecyclerView(rootView);
-        initToolBar(rootView);
-
         return rootView;
-    }
-
-    private void initToolBar(View view){
-        Toolbar toolbar = view.findViewById(R.id.toolbar);
-        //在Fragment中用这个方法的写法：
-        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar); //要有这个才会直接显示应用标题而无需设置
     }
 
     private void initRecyclerView(View view){
@@ -116,10 +114,10 @@ public class HomeFragment extends Fragment {
         List<HomeItem> accountItemList2 = new ArrayList<>();
         //测试时注意！！一个List里的所有Item的日期是相同的！！
 
-        accountItemList1.add(new AccountItem(R.drawable.ic_expend_present,1,50,true,2021,11,27));
-        accountItemList1.add(new AccountItem(R.drawable.ic_expend_rent,2,60,true,2021,11,27));
-        accountItemList2.add(new AccountItem(R.drawable.ic_expend_snacks,3,70,true,2020,1,1));
-        accountItemList2.add((new AccountItem(R.drawable.ic_expend_medicine,4,80,true,2020,1,1)));
+        accountItemList1.add(new AccountItem(R.drawable.icon_business,1,50,true,2021,11,27));
+        accountItemList1.add(new AccountItem(R.drawable.icon_clothes,2,60,true,2021,11,27));
+        accountItemList2.add(new AccountItem(R.drawable.icon_food,3,70,true,2020,1,1));
+        accountItemList2.add((new AccountItem(R.drawable.icon_houserent,4,80,true,2020,1,1)));
 
         String date1 = ((AccountItem)accountItemList1.get(0)).getTagDate();
         String date2 = ((AccountItem)accountItemList2.get(0)).getTagDate();

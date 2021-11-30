@@ -55,6 +55,12 @@ public class MainActivity extends AppCompatActivity {
         AndroidBarUtils.setBarDarkMode(this,true); //状态栏文字图标颜色为黑色
 
         bindView();
+        initToolBar();
+    }
+
+    private void initToolBar(){
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitle("纯记账");
     }
 
     private void bindView(){

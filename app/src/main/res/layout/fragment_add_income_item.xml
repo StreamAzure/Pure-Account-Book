@@ -1,13 +1,119 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.item.AddIncomeItemFragment">
+    android:orientation="vertical"
+    tools:context=".ui.item.AddExpendItemFragment">
+
+    <LinearLayout
+        android:id="@+id/linear_layout_add_income_item"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="21dp"
+        android:layout_marginHorizontal="32dp"
+        android:paddingVertical="12dp"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toTopOf="parent">
 
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:id="@+id/tv_add_income_item_reason"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="2"
+        android:paddingVertical="15dp"
+        android:text="TextView"
+        android:textSize="18sp" />
 
-</FrameLayout>
+    <EditText
+        android:id="@+id/et_add_income_item_account"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="3"
+        android:ems="10"
+        android:inputType="number"
+        android:paddingVertical="15dp" />
+
+    </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/btn_add_income_item_salary"
+        android:layout_height="50dp"
+        android:layout_width="50dp"
+        android:layout_marginHorizontal="32dp"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/icon_salary"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/linear_layout_add_income_item"/>
+    <ImageButton
+        android:id="@+id/btn_add_income_item_winning"
+        android:layout_height="50dp"
+        android:layout_width="50dp"
+        android:background="@drawable/icon_winning"
+        android:layout_marginTop="12dp"
+        app:layout_constraintLeft_toRightOf="@id/btn_add_income_item_salary"
+        app:layout_constraintRight_toLeftOf="@id/btn_add_income_item_investment"
+        app:layout_constraintTop_toBottomOf="@id/linear_layout_add_income_item"/>
+    <ImageButton
+        android:id="@+id/btn_add_income_item_investment"
+        android:layout_height="50dp"
+        android:layout_width="50dp"
+        android:background="@drawable/icon_investment"
+        android:layout_marginTop="12dp"
+        app:layout_constraintLeft_toRightOf="@id/btn_add_income_item_winning"
+        app:layout_constraintRight_toLeftOf="@id/btn_add_income_item_business"
+        app:layout_constraintTop_toBottomOf="@id/linear_layout_add_income_item"/>
+    <ImageButton
+        android:id="@+id/btn_add_income_item_business"
+        android:layout_height="50dp"
+        android:layout_width="50dp"
+        android:layout_marginHorizontal="100dp"
+        android:background="@drawable/icon_business"
+        android:layout_marginTop="12dp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/linear_layout_add_income_item" />
+    <TextView
+        android:id="@+id/tv1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="32dp"
+        android:text="@string/salary"
+        android:paddingVertical="5dp"
+        android:textSize="12sp"
+        app:layout_constraintTop_toBottomOf="@id/btn_add_income_item_salary"
+        app:layout_constraintLeft_toLeftOf="parent"/>
+    <TextView
+        android:id="@+id/tv2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="12dp"
+        android:text="@string/winning"
+        android:paddingVertical="5dp"
+        android:textSize="12sp"
+        app:layout_constraintTop_toBottomOf="@id/btn_add_income_item_winning"
+        app:layout_constraintLeft_toRightOf="@id/tv1"
+        app:layout_constraintRight_toLeftOf="@+id/tv3"/>
+    <TextView
+        android:id="@+id/tv3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="12dp"
+        android:text="@string/investment"
+        android:paddingVertical="5dp"
+        android:textSize="12sp"
+        app:layout_constraintTop_toBottomOf="@id/btn_add_income_item_investment"
+        app:layout_constraintLeft_toRightOf="@id/tv2"
+        app:layout_constraintRight_toLeftOf="@id/tv4"/>
+    <TextView
+        android:id="@+id/tv4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="100dp"
+        android:text="@string/business"
+        android:paddingVertical="5dp"
+        android:textSize="12sp"
+        app:layout_constraintTop_toBottomOf="@id/btn_add_income_item_business"
+        app:layout_constraintRight_toRightOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -7,20 +7,10 @@
     tools:context=".ui.home.HomeFragment"
     android:orientation="vertical">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:elevation="4dp"
-        android:theme="@style/ThemeOverlay.AppCompat.ActionBar">
-
-    </androidx.appcompat.widget.Toolbar>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
-
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/fragment_container"
@@ -30,9 +20,7 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_view_item"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                tools:layout_editor_absoluteX="-16dp"
-                tools:layout_editor_absoluteY="149dp" />
+                android:layout_height="match_parent" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/fab"

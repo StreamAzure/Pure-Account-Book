@@ -21,6 +21,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AddItemActivity extends AppCompatActivity {
+    public final static int ITEM_SALARY = 1;
+    public final static int ITEM_INVESTMENT = ITEM_SALARY+1;
+    public final static int ITEM_BUSINESS = ITEM_SALARY+2;
+    public final static int ITEM_WINNING = ITEM_SALARY+3;
+    public final static int ITEM_FOOD = ITEM_SALARY+4;
+    public final static int ITEM_ENTERTAINMENT = ITEM_SALARY+5;
+    public final static int ITEM_CLOTHES = ITEM_SALARY+6;
+    public final static int ITEM_PETS = ITEM_SALARY+7;
+    public final static int ITEM_HOUSERENT = ITEM_SALARY+8;
+    public final static int ITEM_MEDICINE = ITEM_SALARY+9;
+    public final static int ITEM_SHOPPING = ITEM_SALARY+10;
+    public final static int ITEM_TRAFFIC = ITEM_SALARY+11;
+    public final static int ITEM_TOUR = ITEM_SALARY+12;
+    public final static int ITEM_STUDY = ITEM_SALARY+13;
+
+
     private TabLayout mTabLayout;
     private ViewPager2 mViewPager;
     private String[] tabTitle;

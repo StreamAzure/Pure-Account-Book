@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/nav_home">
+
+    <fragment
+        android:id="@+id/nav_home"
+        android:name="com.jnu.pureaccount.ui.home.HomeFragment"
+        android:label="@string/menu_home"
+        app:defaultNavHost="true"
+        app:navGraph="@navigation/nav_graph"/>
+
+    <fragment
+        android:id="@+id/nav_history"
+        android:name="com.jnu.pureaccount.ui.history.HistoryFragment"
+        android:label="@string/menu_history" />
+
+    <fragment
+        android:id="@+id/nav_analysis"
+        android:name="com.jnu.pureaccount.ui.analysis.AnalysisFragment"
+        android:label="@string/menu_analysis" />
+
+</navigation>

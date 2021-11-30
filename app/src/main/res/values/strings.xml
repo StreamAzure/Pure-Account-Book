@@ -10,6 +10,19 @@
     <string name="menu_home">首页</string>
     <string name="menu_history">历史查看</string>
     <string name="menu_analysis">分析统计</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="food">吃喝饮食</string>
+    <string name="entertainment">影视娱乐</string>
+    <string name="clothes">日常用品</string>
+    <string name="pets">宠物花销</string>
+    <string name="houserent">房租水电</string>
+    <string name="medicine">医疗费用</string>
+    <string name="shopping">逛街购物</string>
+    <string name="traffic">交通出行</string>
+    <string name="tour">旅游度假</string>
+    <string name="study">学习用品</string>
+    <string name="salary">工资薪水</string>
+    <string name="winning">奖品奖金</string>
+    <string name="investment">投资理财</string>
+    <string name="business">经费津贴</string>
 </resources>
