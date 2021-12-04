@@ -41,7 +41,7 @@ public class DayTotalItem extends HomeItem {
     public String getPrintDate(){
         String date;
         Calendar calendar = getDate();
-        int month = calendar.get(Calendar.MONTH);
+        int month = calendar.get(Calendar.MONTH) +1;
         int day = calendar.get(Calendar.DATE);
         String sMonth,sDay;
         if(month<10) sMonth = "0"+month;

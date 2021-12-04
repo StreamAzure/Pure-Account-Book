@@ -107,25 +107,26 @@ public class HomeFragment extends Fragment{
         //虽然不知道为什么，用默认排序就对了
         DataUtils dataUtils = new DataUtils(this.getActivity());
 
-        dataUtils.DeleteTable("item");
+        //dataUtils.DeleteTable("item");
 
         dataUtils.loadItemData(listTreeMap);
         arrangeData(listTreeMap);
     }
 
     private void arrangeData(TreeMap<String, List<HomeItem>> treeMap){
-        Log.e("MYTAG","调用arrangeData");
         //加载数据库
         DataUtils dataUtils = new DataUtils(this.getActivity());
         dataUtils.loadItemData(listTreeMap);
         //重整为要传入Adapter的数据源mHomeItemList
         mHomeItemList.clear();
         Iterator<Map.Entry<String,List<HomeItem>>> it = treeMap.entrySet().iterator();
+
         while(it.hasNext()){
             Map.Entry<String,List<HomeItem>> entry = it.next();
             List<HomeItem> homeItems = entry.getValue();
             //获取对应的homeItem列表
             Calendar calendar = ((AccountItem)homeItems.get(0)).getDate();
+            //TODO:当日小结金额显示
             DayTotalItem dayTotalItem = new DayTotalItem(calendar,100,100);
             mHomeItemList.add(dayTotalItem);
             //加入对应日期Item
@@ -137,13 +138,14 @@ public class HomeFragment extends Fragment{
         for(int i = 0;i < mHomeItemList.size();i++){
             if(mHomeItemList.get(i) instanceof AccountItem){
                 AccountItem accountItem = (AccountItem) mHomeItemList.get(i);
-                Log.e("MYTAG", accountItem.getTitle(getContext(),accountItem.getReason())
+                Log.e("HomeFragment",
+                        accountItem.getTitle(getContext(),accountItem.getReason())
                         +" "+accountItem.getAccount()
                         +" "+accountItem.getTagDate());
             }
             else{
                 DayTotalItem dayTotalItem = (DayTotalItem) mHomeItemList.get(i);
-                Log.e("MYTAG", dayTotalItem.getPrintDate());
+                Log.e("HomeFragment", dayTotalItem.getPrintDate());
             }
         }
     }
@@ -239,7 +241,6 @@ public class HomeFragment extends Fragment{
                 icon = itemView.findViewById(R.id.iv_item_account_icon);
                 account = itemView.findViewById(R.id.tv_item_account_account);
                 reason = itemView.findViewById(R.id.tv_item_account_reason);
-                Log.e("MYTAG","调用AccountItemHolder");
             }
         }
         class DayTotalItemHolder extends RecyclerView.ViewHolder{
@@ -251,7 +252,6 @@ public class HomeFragment extends Fragment{
                 date = itemView.findViewById(R.id.tv_item_daytotal_date);
                 income = itemView.findViewById(R.id.tv_item_daytotal_income);
                 expend = itemView.findViewById(R.id.tv_item_daytotal_expend);
-                Log.e("MYTAG","调用DayTotalItemHolder");
             }
 
         }

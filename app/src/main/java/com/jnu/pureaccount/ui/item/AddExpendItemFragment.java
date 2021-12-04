@@ -49,9 +49,9 @@ public class AddExpendItemFragment extends Fragment implements View.OnClickListe
     int[] IntSelectDate = new int[5];
 
     private void initSelectDate(){
-        selectDate = new CalendarUtils().IntToTimeString(nowDate[0],nowDate[1],nowDate[2]);
+        selectDate = new CalendarUtils().IntToTimeString(nowDate[0],nowDate[1]+1,nowDate[2]);
         IntSelectDate = new CalendarUtils().TimeStringToInt(selectDate,IntSelectDate);
-        btnTime.setText(IntSelectDate[1]+1+"月"+IntSelectDate[2]+"日");
+        btnTime.setText(IntSelectDate[1]+"月"+IntSelectDate[2]+"日");
     }
 
     public AddExpendItemFragment() {
@@ -89,7 +89,7 @@ public class AddExpendItemFragment extends Fragment implements View.OnClickListe
                 else {
                     DataUtils dataUtils = new DataUtils(getActivity());
                     dataUtils.InsertItemData(selectItem, Integer.parseInt(accountEdit.getText().toString()), selectDate);
-                    new LogUtils().log("selectDate=" + selectDate);
+                    Log.e("AddExpendItemFragment","selectDate: "+selectDate);
                     getActivity().finish();
                 }
             }
@@ -113,11 +113,11 @@ public class AddExpendItemFragment extends Fragment implements View.OnClickListe
                         new DatePickerDialog.OnDateSetListener() {
                             @Override
                             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                                selectDate = new CalendarUtils().IntToTimeString(year,month,dayOfMonth);
+                                selectDate = new CalendarUtils().IntToTimeString(year,month+1,dayOfMonth);
                                 IntSelectDate = new CalendarUtils().TimeStringToInt(selectDate,IntSelectDate);
                                 btnTime.setText(month+1+"月"+dayOfMonth+"日");
                             }
-                        },IntSelectDate[0],IntSelectDate[1],IntSelectDate[2]).show();
+                        },IntSelectDate[0],IntSelectDate[1]-1,IntSelectDate[2]).show();
             }
         });
 
@@ -161,61 +161,51 @@ public class AddExpendItemFragment extends Fragment implements View.OnClickListe
                 linearLayout.setBackgroundColor(getResources().getColor(R.color.food));
                 addItemReason.setText(getResources().getString(R.string.food));
                 selectItem = ITEM_FOOD;
-                Log.e("MYLOG","selectItem "+selectItem);
                 break;
             case R.id.btn_add_expend_item_entertainment:
                 linearLayout.setBackgroundColor(getResources().getColor(R.color.entertainment));
                 addItemReason.setText(getResources().getString(R.string.entertainment));
                 selectItem = ITEM_ENTERTAINMENT;
-                Log.e("MYLOG","selectItem "+selectItem);
                 break;
             case R.id.btn_add_expend_item_clothes:
                 linearLayout.setBackgroundColor(getResources().getColor(R.color.clothes));
                 addItemReason.setText(getResources().getString(R.string.clothes));
                 selectItem = ITEM_CLOTHES;
-                Log.e("MYLOG","selectItem "+selectItem);
                 break;
             case R.id.btn_add_expend_item_pet:
                 linearLayout.setBackgroundColor(getResources().getColor(R.color.makeup));
                 addItemReason.setText(getResources().getString(R.string.pets));
                 selectItem = ITEM_PETS;
-                Log.e("MYLOG","selectItem "+selectItem);
                 break;
             case R.id.btn_add_expend_item_houserent:
                 linearLayout.setBackgroundColor(getResources().getColor(R.color.houserent));
                 addItemReason.setText(getResources().getString(R.string.houserent));
                 selectItem = ITEM_HOUSERENT;
-                Log.e("MYLOG","selectItem "+selectItem);
                 break;
             case R.id.btn_add_expend_item_medicine:
                 linearLayout.setBackgroundColor(getResources().getColor(R.color.medicine));
                 addItemReason.setText(getResources().getString(R.string.medicine));
                 selectItem = ITEM_MEDICINE;
-                Log.e("MYLOG","selectItem "+selectItem);
                 break;
             case R.id.btn_add_expend_item_shopping:
                 linearLayout.setBackgroundColor(getResources().getColor(R.color.shopping));
                 addItemReason.setText(getResources().getString(R.string.shopping));
                 selectItem = ITEM_SHOPPING;
-                Log.e("MYLOG","selectItem "+selectItem);
                 break;
             case R.id.btn_add_expend_item_traffic:
                 linearLayout.setBackgroundColor(getResources().getColor(R.color.traffic));
                 addItemReason.setText(getResources().getString(R.string.traffic));
                 selectItem = ITEM_TRAFFIC;
-                Log.e("MYLOG","selectItem "+selectItem);
                 break;
             case R.id.btn_add_expend_item_tour:
                 linearLayout.setBackgroundColor(getResources().getColor(R.color.tour));
                 addItemReason.setText(getResources().getString(R.string.tour));
                 selectItem = ITEM_TOUR;
-                Log.e("MYLOG","selectItem "+selectItem);
                 break;
             case R.id.btn_add_expend_item_study:
                 linearLayout.setBackgroundColor(getResources().getColor(R.color.study));
                 addItemReason.setText(getResources().getString(R.string.study));
                 selectItem = ITEM_STUDY;
-                Log.e("MYLOG","selectItem "+selectItem);
                 break;
         }
     }

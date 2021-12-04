@@ -38,9 +38,10 @@ public class DataUtils {
             int account = cursor.getInt(cursor.getColumnIndexOrThrow("account"));
             String date = cursor.getString(cursor.getColumnIndexOrThrow("date"));
             int type = cursor.getInt(cursor.getColumnIndexOrThrow("type"));
-            Log.e("MYTAG","数据库数据："+reason+" "+account+" "+date);
             try {
                 AccountItem accountItem = new AccountItem(reason,account,new CalendarUtils().StringToCalender(date));
+                Log.e("DataUtils","数据库数据："+accountItem.getTitle(context,reason)+" 金额："+accountItem.getAccount()+" "
+                        +"TagDate:"+accountItem.getTagDate()+" DataBaseDate:"+date);
                 updateData(listTreeMap, accountItem);
                 //插入到TreeMap中
             } catch (ParseException e) {
