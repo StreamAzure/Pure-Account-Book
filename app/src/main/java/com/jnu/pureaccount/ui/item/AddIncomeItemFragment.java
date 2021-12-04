@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.jnu.pureaccount.R;
+import com.jnu.pureaccount.event.AddItemActivity;
 
 public class AddIncomeItemFragment extends Fragment implements View.OnClickListener{
 

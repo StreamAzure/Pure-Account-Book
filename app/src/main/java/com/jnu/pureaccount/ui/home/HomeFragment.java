@@ -1,6 +1,9 @@
 package com.jnu.pureaccount.ui.home;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -33,8 +36,13 @@ import com.jnu.pureaccount.data.AccountItem;
 import com.jnu.pureaccount.data.DayTotalItem;
 import com.jnu.pureaccount.data.HomeItem;
 import com.jnu.pureaccount.data.MonthTotalItem;
+import com.jnu.pureaccount.db.DatabaseHelper;
 import com.jnu.pureaccount.event.AddItemActivity;
+import com.jnu.pureaccount.ui.item.AddExpendItemFragment;
+import com.jnu.pureaccount.utils.CalendarUtils;
+import com.jnu.pureaccount.utils.DataUtils;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Comparator;
@@ -43,9 +51,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-public class HomeFragment extends Fragment {
-    private static final int RESULT_CODE_ADD_OK = 200;
-    private ActivityResultLauncher<Intent> AddActivityResultLauncher;
+public class HomeFragment extends Fragment{
+    public static final int RESULT_CODE_ADD_OK = 200;
     private RecyclerView recyclerView;
 
     HomeItemAdapter mAdapter;
@@ -54,12 +61,20 @@ public class HomeFragment extends Fragment {
     List<HomeItem> mHomeItemList;
     //传入Adapter的数据源
 
+    @Override
+    public void onResume(){
+        super.onResume();
+        arrangeData(listTreeMap);
+        mAdapter.notifyDataSetChanged();
+        //数据一多必出问题……但是position也很难用时间复杂度更好的方法获得，先将就一下吧
+    }
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
+
         initData();//初始化mHomeItemList
         View rootView = inflater.inflate(R.layout.fragment_home,container,false);
 
-        initActivityLauncher();
         initFloatingActionButton(rootView);
         initRecyclerView(rootView);
         return rootView;
@@ -80,57 +95,31 @@ public class HomeFragment extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(HomeFragment.this.getActivity(), AddItemActivity.class);
-                AddActivityResultLauncher.launch(intent);
+                Intent intent = new Intent(getActivity(), AddItemActivity.class);
+                startActivity(intent);
             }
         });
     }
 
-    //注册ActivityLauncher及接收回传数据
-    private void initActivityLauncher(){
-        AddActivityResultLauncher = registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
-                    @Override
-                    public void onActivityResult(ActivityResult result) {
-                        if (result.getResultCode() == RESULT_CODE_ADD_OK) {
-
-                        }
-                    }
-                });
-    }
-
     private void initData() {
-//        listTreeMap = new TreeMap<String,List<HomeItem>>(new Comparator<String>() {
-//            @Override
-//            public int compare(String o1, String o2) {
-//                return o2.compareTo(o1);
-//            }
-//        });
-
+        mHomeItemList = new ArrayList<>();
         listTreeMap = new TreeMap<>();
         //虽然不知道为什么，用默认排序就对了
+        DataUtils dataUtils = new DataUtils(this.getActivity());
 
-        List<HomeItem> accountItemList1 = new ArrayList<>();
-        List<HomeItem> accountItemList2 = new ArrayList<>();
-        //测试时注意！！一个List里的所有Item的日期是相同的！！
+        dataUtils.DeleteTable("item");
 
-        accountItemList1.add(new AccountItem(R.drawable.icon_business,1,50,true,2021,11,27));
-        accountItemList1.add(new AccountItem(R.drawable.icon_clothes,2,60,true,2021,11,27));
-        accountItemList2.add(new AccountItem(R.drawable.icon_food,3,70,true,2020,1,1));
-        accountItemList2.add((new AccountItem(R.drawable.icon_houserent,4,80,true,2020,1,1)));
-
-        String date1 = ((AccountItem)accountItemList1.get(0)).getTagDate();
-        String date2 = ((AccountItem)accountItemList2.get(0)).getTagDate();
-        listTreeMap.put(date2,accountItemList1);
-        listTreeMap.put(date1,accountItemList2);
-
+        dataUtils.loadItemData(listTreeMap);
         arrangeData(listTreeMap);
-
     }
 
     private void arrangeData(TreeMap<String, List<HomeItem>> treeMap){
+        Log.e("MYTAG","调用arrangeData");
+        //加载数据库
+        DataUtils dataUtils = new DataUtils(this.getActivity());
+        dataUtils.loadItemData(listTreeMap);
         //重整为要传入Adapter的数据源mHomeItemList
-        mHomeItemList = new ArrayList<>();
+        mHomeItemList.clear();
         Iterator<Map.Entry<String,List<HomeItem>>> it = treeMap.entrySet().iterator();
         while(it.hasNext()){
             Map.Entry<String,List<HomeItem>> entry = it.next();
@@ -144,10 +133,18 @@ public class HomeFragment extends Fragment {
                 mHomeItemList.add(homeItems.get(i));
             }
         }
-
         //debug
         for(int i = 0;i < mHomeItemList.size();i++){
-            Log.e("MYTAG",mHomeItemList.get(i)+"");
+            if(mHomeItemList.get(i) instanceof AccountItem){
+                AccountItem accountItem = (AccountItem) mHomeItemList.get(i);
+                Log.e("MYTAG", accountItem.getTitle(getContext(),accountItem.getReason())
+                        +" "+accountItem.getAccount()
+                        +" "+accountItem.getTagDate());
+            }
+            else{
+                DayTotalItem dayTotalItem = (DayTotalItem) mHomeItemList.get(i);
+                Log.e("MYTAG", dayTotalItem.getPrintDate());
+            }
         }
     }
 
@@ -211,8 +208,8 @@ public class HomeFragment extends Fragment {
             if(holder instanceof AccountItemHolder){
                 AccountItemHolder viewHolder = (AccountItemHolder) holder;
                 AccountItem accountItem = (AccountItem) adpList.get(position);
-                viewHolder.icon.setBackgroundResource(accountItem.getIcon());
-                viewHolder.reason.setText(accountItem.getReason()+"");
+                viewHolder.icon.setBackgroundResource(accountItem.getIcon(accountItem.getReason()));
+                viewHolder.reason.setText(accountItem.getTitle(HomeFragment.this.getContext(),accountItem.getReason()));
                 viewHolder.account.setText(accountItem.getAccount()+"");
             }
             else if(holder instanceof MonthTotalItemHolder){
@@ -230,7 +227,7 @@ public class HomeFragment extends Fragment {
 
         @Override
         public int getItemCount() {
-            return mHomeItemList.size();
+            return adpList.size();
         }
 
         class AccountItemHolder extends RecyclerView.ViewHolder{

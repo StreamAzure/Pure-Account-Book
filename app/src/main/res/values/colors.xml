@@ -25,5 +25,6 @@
     <color name="traffic">#99D6F2</color>
     <color name="tour">#EBB375</color>
     <color name="study">#E6B673</color>
+    <color name="grey_f3f3f3">#f3f3f3</color>
 
 </resources>
