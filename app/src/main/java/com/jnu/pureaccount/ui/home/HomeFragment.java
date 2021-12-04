@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -18,6 +19,7 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -101,10 +103,11 @@ public class HomeFragment extends Fragment{
         });
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     private void initData() {
         mHomeItemList = new ArrayList<>();
-        listTreeMap = new TreeMap<>();
-        //虽然不知道为什么，用默认排序就对了
+        listTreeMap = new TreeMap<String, List<HomeItem>>(Comparator.reverseOrder());
+        //倒序显示
         DataUtils dataUtils = new DataUtils(this.getActivity());
 
         //dataUtils.DeleteTable("item");
@@ -120,7 +123,6 @@ public class HomeFragment extends Fragment{
         //重整为要传入Adapter的数据源mHomeItemList
         mHomeItemList.clear();
         Iterator<Map.Entry<String,List<HomeItem>>> it = treeMap.entrySet().iterator();
-
         while(it.hasNext()){
             Map.Entry<String,List<HomeItem>> entry = it.next();
             List<HomeItem> homeItems = entry.getValue();
