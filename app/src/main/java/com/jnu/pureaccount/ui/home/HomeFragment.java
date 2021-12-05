@@ -1,5 +1,9 @@
 package com.jnu.pureaccount.ui.home;
 
+import static com.jnu.pureaccount.event.AddItemActivity.OPERATION_ADD;
+import static com.jnu.pureaccount.event.AddItemActivity.OPERATION_EDIT;
+
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -7,8 +11,11 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -20,6 +27,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -40,6 +48,7 @@ import com.jnu.pureaccount.data.HomeItem;
 import com.jnu.pureaccount.data.MonthTotalItem;
 import com.jnu.pureaccount.db.DatabaseHelper;
 import com.jnu.pureaccount.event.AddItemActivity;
+import com.jnu.pureaccount.event.ShowItemActivity;
 import com.jnu.pureaccount.ui.item.AddExpendItemFragment;
 import com.jnu.pureaccount.utils.CalendarUtils;
 import com.jnu.pureaccount.utils.DataUtils;
@@ -101,6 +110,7 @@ public class HomeFragment extends Fragment{
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), AddItemActivity.class);
+                intent.putExtra("operation", OPERATION_ADD);
                 startActivity(intent);
             }
         });
@@ -170,13 +180,10 @@ public class HomeFragment extends Fragment{
             }
             //更新日统计数据。笨办法，等数据库熟练了再优化
             if(mHomeItemList.get(mHomeItemList.size()- homeItems.size()-1) instanceof DayTotalItem){
-                Log.e("HomeFragment","DayTotalItem position正确");
+                //Log.e("HomeFragment","DayTotalItem position正确");
                 dayTotalItem = (DayTotalItem) mHomeItemList.get(mHomeItemList.size()-homeItems.size()-1);
                 dayTotalItem.setExpendSubTotal(expendSubTotal);
                 dayTotalItem.setIncomeSubTotal(incomeSubTotal);
-            }
-            else{
-                Log.e("HomeFragment","DayTotalItem position不对");
             }
         }
 
@@ -185,19 +192,22 @@ public class HomeFragment extends Fragment{
         ((MonthTotalItem)mHomeItemList.get(0)).setIncome(monthIncome);
 
         //debug
+        Log.e("HomeFragment","===========账目全部信息===========");
         for(int i = 0;i < mHomeItemList.size();i++){
             if(mHomeItemList.get(i) instanceof AccountItem){
                 AccountItem accountItem = (AccountItem) mHomeItemList.get(i);
                 Log.e("HomeFragment",
                         accountItem.getTitle(getContext(),accountItem.getReason())
                         +" "+accountItem.getAccount()
-                        +" "+accountItem.getTagDate());
+                        +" TagTime:"+accountItem.getTagDate()
+                        +" CreateTime:"+accountItem.getCreateTime());
             }
             else if(mHomeItemList.get(i) instanceof DayTotalItem){
                 DayTotalItem dayTotalItem = (DayTotalItem) mHomeItemList.get(i);
                 Log.e("HomeFragment", dayTotalItem.getPrintDate());
             }
         }
+        Log.e("HomeFragment","==============结束==============");
     }
 
     @Override
@@ -206,9 +216,13 @@ public class HomeFragment extends Fragment{
     }
 
     public class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
-        private static final int VIEW_TYPE_ACCOUNT_ITEM = 1;
-        private static final int VIEW_TYPE_MONTH_TOTAL_ITEM = 2;
-        private static final int VIEW_TYPE_DAY_TOTAL_ITEM = 3;
+        private static final int VIEW_TYPE_ACCOUNT_ITEM = 100;
+        private static final int VIEW_TYPE_MONTH_TOTAL_ITEM = 200;
+        private static final int VIEW_TYPE_DAY_TOTAL_ITEM = 300;
+
+        private static final int MENU_ITEM_EDIT = 1;
+        private static final int MENU_ITEM_DETAIL = 2;
+        private static final int MENU_ITEM_DELETE = 3;
 
         private final List<HomeItem> adpList;
 
@@ -294,7 +308,7 @@ public class HomeFragment extends Fragment{
             return adpList.size();
         }
 
-        class AccountItemHolder extends RecyclerView.ViewHolder{
+        class AccountItemHolder extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener, MenuItem.OnMenuItemClickListener{
             ImageView icon;
             TextView account;
             TextView reason;
@@ -303,6 +317,62 @@ public class HomeFragment extends Fragment{
                 icon = itemView.findViewById(R.id.iv_item_account_icon);
                 account = itemView.findViewById(R.id.tv_item_account_account);
                 reason = itemView.findViewById(R.id.tv_item_account_reason);
+
+                //让Item可以响应创建菜单的点击事件
+                itemView.setOnCreateContextMenuListener(this);
+            }
+            @Override
+            public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+                //添加三个菜单项
+                MenuItem menuItemEdit = menu.add(Menu.NONE, MENU_ITEM_EDIT, 1, "修改");
+                MenuItem menuItemDetail = menu.add(Menu.NONE, MENU_ITEM_DETAIL, 2, "详情");
+                MenuItem menuItemDelete = menu.add(Menu.NONE, MENU_ITEM_DELETE, 3, "删除");
+                //菜单项的响应事件
+                menuItemEdit.setOnMenuItemClickListener(this);
+                menuItemDetail.setOnMenuItemClickListener(this);
+                menuItemDelete.setOnMenuItemClickListener(this);
+            }
+
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                int position = getAdapterPosition();
+                //这个位置就是adpList里的位置，adpList.get(position)可以拿到对应项
+                Intent intent;
+                AccountItem accountItem = (AccountItem) adpList.get(position);
+                switch (item.getItemId()) { //item.getItemId表示按的是右键菜单中的哪一项
+                    case MENU_ITEM_EDIT:
+                        intent = new Intent(getActivity(),AddItemActivity.class);
+                        intent.putExtra("operation", OPERATION_EDIT);
+                        intent.putExtra("previousAccount", accountItem.getAccount());
+                        intent.putExtra("previousSelectTime", accountItem.getTagDate());
+                        intent.putExtra("previousSelectItem", accountItem.getReason());
+                        intent.putExtra("createTime",accountItem.getCreateTime());
+                        startActivity(intent);
+                        //跳转过去修改，直接更新数据库，返回时因为onResume，直接重新载入整个数据库了
+                        break;
+                    case MENU_ITEM_DETAIL:
+                        intent = new Intent(getActivity(), ShowItemActivity.class);
+                        startActivity(intent);
+                        break;
+                    case MENU_ITEM_DELETE:
+                        //弹出对话框，只有文本提示、确定和取消，可以不写自定义布局
+                        AlertDialog.Builder bookDeleteDialog = new AlertDialog.Builder(HomeFragment.this.getContext());
+                        bookDeleteDialog.setMessage("确定要删除吗？");
+                        bookDeleteDialog.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                DataUtils dataUtils = new DataUtils(getActivity());
+                                dataUtils.DeleteItem(accountItem.getCreateTime());
+                                onResume();
+                            }
+                        });
+                        bookDeleteDialog.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                            }
+                        });
+                        bookDeleteDialog.create().show();
+                        break;
+                }
+                return false;
             }
         }
         class DayTotalItemHolder extends RecyclerView.ViewHolder{

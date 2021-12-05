@@ -10,8 +10,6 @@ import android.widget.EditText;
 import com.jnu.pureaccount.R;
 
 public class KeyBoardUtils {
-    public final static int KEYCODE_ADD = -99;
-    public final static int KEYCODE_MINUS = -100;
     private final Keyboard keyboard;
     private KeyboardView keyboardView;
     private EditText editText;
@@ -49,7 +47,6 @@ public class KeyBoardUtils {
 
         }
 
-        //TODO：键盘按键未全部完成
         @Override
         public void onKey(int primaryCode, int[] keyCodes) {
             Editable editable = editText.getText();
@@ -63,13 +60,10 @@ public class KeyBoardUtils {
                     }
                     break;
                 case Keyboard.KEYCODE_CANCEL:
+                    editText.setText("");
                     break;
                 case Keyboard.KEYCODE_DONE:
                     onEnsureListener.onEnsure(); //接口回调
-                    break;
-                case KEYCODE_ADD:
-                    break;
-                case KEYCODE_MINUS:
                     break;
                 default://其他数字
                     editable.insert(start,Character.toString((char)primaryCode));

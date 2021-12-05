@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- 手指触摸时的 -->
+    <item android:state_pressed="true">
+        <shape android:shape="rectangle">
+            <!-- 填充的颜色 -->
+            <solid android:color="@color/grey_f3f3f3" />
+        </shape>
+    </item>
+
+    <!-- 默认的（触摸之前）button -->
+    <item>
+        <shape android:shape="rectangle">
+            <!-- 填充的颜色 -->
+            <solid android:color="@color/white" />
+        </shape>
+    </item>
+</selector>

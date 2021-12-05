@@ -13,6 +13,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
@@ -20,6 +21,7 @@ import com.jnu.pureaccount.R;
 import com.jnu.pureaccount.ui.item.AddExpendItemFragment;
 import com.jnu.pureaccount.ui.item.AddIncomeItemFragment;
 import com.jnu.pureaccount.utils.AndroidBarUtils;
+import com.jnu.pureaccount.utils.CalendarUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,18 +42,30 @@ public class AddItemActivity extends AppCompatActivity{
     public final static int ITEM_INVESTMENT = ITEM_FOOD +12;
     public final static int ITEM_BUSINESS = ITEM_FOOD +13;
 
+    public final static int OPERATION_EDIT = 500;
+    public final static int OPERATION_ADD = 600;
+
     private TabLayout mTabLayout;
     private ViewPager2 mViewPager;
     private String[] tabTitle;
     private List<Fragment> mFragments = new ArrayList<>();
 
-    private int mDataReason;
-    private int mDataAccount;
+    public static int operationTAG = OPERATION_ADD;
+    public static String previousSelectTime;
+    public static double previousAccount;
+    public static int previousSelectItem;
+    public static String createTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_item);
+
+        //状态栏颜色更改
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        //注意要清除 FLAG_TRANSLUCENT_STATUS flag
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        getWindow().setStatusBarColor(getResources().getColor(R.color.background));
 
         AndroidBarUtils.setBarDarkMode(this,true); //状态栏文字图标颜色为黑色
 
@@ -68,6 +82,15 @@ public class AddItemActivity extends AppCompatActivity{
             }
         });
         initTabLayout();
+
+        //接收从HomeFragment传来的操作标记
+        Intent intent = getIntent();
+        operationTAG = intent.getIntExtra("operation",OPERATION_ADD);
+        previousAccount = intent.getDoubleExtra("previousAccount",0);
+        previousSelectTime = intent.getStringExtra("previousSelectTime");
+        previousSelectItem = intent.getIntExtra("previousSelectItem",14);
+        createTime = intent.getStringExtra("createTime");
+
     }
 
     private void initTabLayout(){

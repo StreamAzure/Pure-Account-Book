@@ -12,6 +12,7 @@ public class AccountItem extends HomeItem {
     private double account;
     private int type; //0支出 1收入
     private Calendar date;
+    private String createTime;//条目创建时间，24小时制，格式yyyy-MM-dd HH:mm:ss
 
     public AccountItem(int reason, double account, int year,int month,int date) {
         this.icon = getIcon(reason);
@@ -22,12 +23,17 @@ public class AccountItem extends HomeItem {
         this.date.set(year, month, date);
     }
 
-    public AccountItem(int reason, double account,Calendar calendar){
+    public AccountItem(int reason, double account,Calendar calendar, String createTime){
         this.icon = getIcon(reason);
         this.reason = reason;
         this.account = account;
         this.type = getType();
         this.date = calendar;
+        this.createTime = createTime;
+    }
+
+    public String getTitle(Context context){
+        return getTitle(context,this.reason);
     }
 
 
@@ -137,5 +143,13 @@ public class AccountItem extends HomeItem {
 
     public Calendar getDate(){
         return this.date;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
+    }
+
+    public String getCreateTime() {
+        return createTime;
     }
 }

@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.item.AddExpendItemFragment">
+    tools:context=".ui.item.AddExpendItemFragment"
+    android:background="@color/background">
 
     <LinearLayout
         android:id="@+id/linear_layout_add_expend_item"
@@ -13,6 +14,7 @@
         android:layout_marginVertical="21dp"
         android:layout_marginHorizontal="32dp"
         android:padding="12dp"
+        android:background="@color/white"
         android:orientation="horizontal"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -23,7 +25,8 @@
             android:layout_weight="2"
             android:paddingVertical="15dp"
             android:gravity="center_horizontal"
-            android:text="TextView"
+            android:textColor="@color/black"
+            android:text="请选择类型"
             android:textSize="18sp" />
 
         <EditText
@@ -33,6 +36,8 @@
             android:layout_weight="3"
             android:ems="10"
             android:inputType="number"
+            android:gravity="end"
+            android:hint="输入金额"
             android:paddingVertical="15dp" />
 
     </LinearLayout>
@@ -42,13 +47,13 @@
         android:layout_height="wrap_content"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/keyBoard">
+        app:layout_constraintBottom_toTopOf="@id/keyBoard"
+        android:background="@color/white">
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@color/white"
+            android:background="@drawable/btn_background"
             android:id="@+id/btn_time"
-            android:layout_marginHorizontal="15dp"
             android:layout_weight="1"
             android:textSize="12sp"
             android:textColor="@color/black"
@@ -56,10 +61,12 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:background="@color/white"
+            style="@style/Theme.PureAccount.Custom"
+            android:background="@drawable/btn_background"
             android:id="@+id/btn_remarks"
             android:layout_weight="15"
             android:hint="添加备注..."
+            android:paddingHorizontal="15dp"
             android:gravity="center_vertical"
             android:layout_marginEnd="15dp"
             />

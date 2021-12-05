@@ -14,6 +14,21 @@ public class CalendarUtils {
         return calendar;
     }
 
+    public String getNowDateString(){
+        //获取当前时间，精确到日
+        Date date = new Date();
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        return format.format(date);
+    }
+
+
+    public String getNowTimeString(){
+        //获取当前时间，24小时制，精确到毫秒，格式yyyy-MM-dd HH-mm-ss-SSS
+        Date date = new Date();
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss-SSS");
+        return format.format(date);
+    }
+
     public String IntToTimeString(int year, int month, int dayOfMonth){
         //转成"yyyy-mm-dd"格式的字符串
         String date,strYear,strMonth,strDay;
@@ -31,11 +46,11 @@ public class CalendarUtils {
     }
 
     public int[] getNowDate(){
-        //获取当前日期，返回顺序年月日
+        //获取当前日期，返回顺序年月日，月份已修正
         int[] date = new int[5];
         Calendar calendar = Calendar.getInstance();
         date[0] = calendar.get(Calendar.YEAR);
-        date[1] = calendar.get(Calendar.MONTH);
+        date[1] = calendar.get(Calendar.MONTH) + 1;
         date[2] = calendar.get(Calendar.DAY_OF_MONTH);
         return date;
     }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.jnu.pureaccount">
+    package="com.jnu.pureaccount" >
 
     <application
         android:allowBackup="true"
@@ -8,18 +8,20 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.PureAccount.NoActionBar">
+        android:theme="@style/Theme.PureAccount.NoActionBar" >
         <activity
-            android:name=".event.EditItemActivity"
-            android:exported="false" />
+            android:name=".event.ShowItemActivity"
+            android:exported="false"
+            android:label="@string/title_activity_show_item"
+            android:theme="@style/Theme.PureAccount.NoActionBar.NoActionBar" />
         <activity
             android:name=".event.AddItemActivity"
-            android:parentActivityName=".MainActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:parentActivityName=".MainActivity" />
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:label="@string/app_name">
+            android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

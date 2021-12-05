@@ -31,7 +31,7 @@ import com.jnu.pureaccount.utils.LogUtils;
 
 public class AddExpendItemFragment extends Fragment implements View.OnClickListener {
 
-    public int selectItem;
+    public int selectItem = 0;
     public double account;
     public String selectDate;
     private LinearLayout linearLayout;
@@ -49,7 +49,7 @@ public class AddExpendItemFragment extends Fragment implements View.OnClickListe
     int[] IntSelectDate = new int[5];
 
     private void initSelectDate(){
-        selectDate = new CalendarUtils().IntToTimeString(nowDate[0],nowDate[1]+1,nowDate[2]);
+        selectDate = new CalendarUtils().IntToTimeString(nowDate[0],nowDate[1],nowDate[2]);
         IntSelectDate = new CalendarUtils().TimeStringToInt(selectDate,IntSelectDate);
         btnTime.setText(IntSelectDate[1]+"月"+IntSelectDate[2]+"日");
     }
@@ -76,7 +76,14 @@ public class AddExpendItemFragment extends Fragment implements View.OnClickListe
         initView(rootView);
         KeyBoardUtils keyBoardUtils = new KeyBoardUtils(keyboardView,accountEdit);
         keyBoardUtils.showKeyboard();
-        initSelectDate();
+        initSelectDate();//初始化选择时间为今天的日期
+
+        if(operationTAG == OPERATION_EDIT){
+            //如果是修改，说明之前有数据，相关控件的值初始时都要保持原状
+            selectDate = previousSelectTime;
+            selectItem = previousSelectItem;
+            accountEdit.setText(previousAccount+"");
+        }
 
         //键盘的确认按钮
         keyBoardUtils.setOnEnsureListener(new KeyBoardUtils.OnEnsureListener(){
@@ -86,10 +93,17 @@ public class AddExpendItemFragment extends Fragment implements View.OnClickListe
                 if(accountEdit.getText().toString().isEmpty()){
                     Toast.makeText(getContext(), "请输入金额！", Toast.LENGTH_SHORT).show();
                 }
+                else if(selectItem == 0){
+                    Toast.makeText(getContext(),"请选择类型！",Toast.LENGTH_SHORT).show();
+                }
                 else {
                     DataUtils dataUtils = new DataUtils(getActivity());
-                    dataUtils.InsertItemData(selectItem, Double.parseDouble(accountEdit.getText().toString()), selectDate);
-                    Log.e("AddExpendItemFragment","selectDate: "+selectDate);
+                    if(operationTAG == OPERATION_ADD) {
+                        dataUtils.InsertItemData(selectItem, Double.parseDouble(accountEdit.getText().toString()), selectDate);
+                    }
+                    else if(operationTAG == OPERATION_EDIT){
+                        dataUtils.EditItemData(selectItem,Double.parseDouble(accountEdit.getText().toString()),selectDate,createTime);
+                    }
                     getActivity().finish();
                 }
             }
@@ -113,6 +127,7 @@ public class AddExpendItemFragment extends Fragment implements View.OnClickListe
                         new DatePickerDialog.OnDateSetListener() {
                             @Override
                             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                                //month是DatePicker时间选择器返回的month，也少1，手动补
                                 selectDate = new CalendarUtils().IntToTimeString(year,month+1,dayOfMonth);
                                 IntSelectDate = new CalendarUtils().TimeStringToInt(selectDate,IntSelectDate);
                                 btnTime.setText(month+1+"月"+dayOfMonth+"日");

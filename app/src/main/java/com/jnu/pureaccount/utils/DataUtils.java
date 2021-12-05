@@ -27,21 +27,23 @@ public class DataUtils {
         dbVersion = 1;
     }
 
-    public void loadItemData(TreeMap<String,List<HomeItem>> listTreeMap){ //从数据库中加载全部条目
+    public void loadItemData(TreeMap<String,List<HomeItem>> listTreeMap){
+        //从数据库中加载全部条目
         listTreeMap.clear();
         SQLiteOpenHelper sqLiteOpenHelper = new DatabaseHelper(context,dbName,null,dbVersion);
         SQLiteDatabase sqLiteDatabase = sqLiteOpenHelper.getReadableDatabase(); //只读
         //只有一张表item，收入和支出都在里面，以"type"列区分
-        Cursor cursor = sqLiteDatabase.query("item",new String[]{"reason","account","date","type"}, null,null,null,null,null);
+        Cursor cursor = sqLiteDatabase.query("item",new String[]{"createTime","reason","account","type","date","year","month","day"}, null,null,null,null,null);
         while(cursor.moveToNext()){
             int reason = cursor.getInt(cursor.getColumnIndexOrThrow("reason"));
             double account = cursor.getDouble(cursor.getColumnIndexOrThrow("account"));
             String date = cursor.getString(cursor.getColumnIndexOrThrow("date"));
-            int type = cursor.getInt(cursor.getColumnIndexOrThrow("type"));
+            String createTime = cursor.getString(cursor.getColumnIndexOrThrow("createTime"));
             try {
-                AccountItem accountItem = new AccountItem(reason,account,new CalendarUtils().StringToCalender(date));
+                //new一个AccountItem
+                AccountItem accountItem = new AccountItem(reason,account,new CalendarUtils().StringToCalender(date),createTime);
                 Log.e("DataUtils","数据库数据："+accountItem.getTitle(context,reason)+" 金额："+accountItem.getAccount()+" "
-                        +"TagDate:"+accountItem.getTagDate()+" DataBaseDate:"+date);
+                        +"Date:"+accountItem.getTagDate()+" CreateTime:"+createTime);
                 updateData(listTreeMap, accountItem);
                 //插入到TreeMap中
             } catch (ParseException e) {
@@ -59,12 +61,51 @@ public class DataUtils {
         if ( reason <= 10 ) type = 0;
         else type = 1;
 
+        int[] tmpTime = new int[5];
+        new CalendarUtils().TimeStringToInt(date, tmpTime);
+
+        ContentValues values = new ContentValues();
+        values.put("createTime",new CalendarUtils().getNowTimeString());
+        values.put("reason", reason);
+        values.put("account",account);
+        values.put("type",type);
+        values.put("date",date);
+        values.put("year",tmpTime[0]);
+        values.put("month",tmpTime[1]);
+        values.put("day",tmpTime[2]);
+
+        sqLiteDatabase.insert("item",null,values);
+    }
+
+    public void EditItemData(int reason, double account, String date, String createTime){
+        SQLiteOpenHelper sqLiteOpenHelper = new DatabaseHelper(context,dbName,null,dbVersion);
+        SQLiteDatabase sqLiteDatabase = sqLiteOpenHelper.getWritableDatabase();
+
+        int type = 0;
+        if ( reason <= 10 ) type = 0;
+        else type = 1;
+
+        int[] tmpTime = new int[5];
+        new CalendarUtils().TimeStringToInt(date, tmpTime);
+
         ContentValues values = new ContentValues();
         values.put("reason", reason);
         values.put("account",account);
-        values.put("date",date);
         values.put("type",type);
-        sqLiteDatabase.insert("item",null,values);
+        values.put("date",date);
+        values.put("year",tmpTime[0]);
+        values.put("month",tmpTime[1]);
+        values.put("day",tmpTime[2]);
+
+        sqLiteDatabase.update("item", values, "createTime=?", new String[]{createTime});
+        //字符串列表内的内容会依次替换whereClause参数里的问号
+    }
+
+    public void DeleteItem(String createTime){
+        SQLiteOpenHelper sqLiteOpenHelper = new DatabaseHelper(context,dbName,null,dbVersion);
+        SQLiteDatabase sqLiteDatabase = sqLiteOpenHelper.getWritableDatabase();
+
+        sqLiteDatabase.delete("item","createTime=?",new String[]{createTime});
     }
 
     //清空表
