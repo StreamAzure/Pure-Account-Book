@@ -4,23 +4,29 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    app:layout_scrollFlags="">
+    android:paddingHorizontal="22dp"
+    android:paddingVertical="15dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingVertical="20dp">
+        android:background="@color/white">
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="净资产"
+            android:textSize="13sp"
+            android:paddingTop="15dp"
             android:gravity="center_horizontal"/>
 
         <TextView
+            android:id="@+id/tv_total"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="3424324"
+            android:padding="15dp"
+            android:textSize="20sp"
             android:gravity="center_horizontal"/>
     </LinearLayout>
 
@@ -29,7 +35,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:paddingVertical="5dp">
+        android:background="@color/white">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -40,12 +46,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
-                android:text="43324324"/>
+                android:textSize="12sp"
+                android:text="本月收入"/>
             <TextView
+                android:id="@+id/tv_monthtotal_income"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
-                android:text="本月收入"/>
+                android:padding="15dp"
+                android:textSize="15sp"
+                android:text="43324324"/>
+
         </LinearLayout>
 
         <LinearLayout
@@ -56,13 +67,18 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="43324324"
-                android:gravity="center_horizontal"/>
+                android:gravity="center_horizontal"
+                android:textSize="12sp"
+                android:text="本月支出"/>
             <TextView
+                android:id="@+id/tv_monthtotal_expend"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:text="本月支出"/>
+                android:text="43324324"
+                android:padding="15dp"
+                android:textSize="15sp"
+                android:gravity="center_horizontal"/>
+
         </LinearLayout>
 
     </LinearLayout>

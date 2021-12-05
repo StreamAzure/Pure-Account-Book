@@ -44,6 +44,8 @@ import com.jnu.pureaccount.ui.item.AddExpendItemFragment;
 import com.jnu.pureaccount.utils.CalendarUtils;
 import com.jnu.pureaccount.utils.DataUtils;
 
+import org.w3c.dom.Text;
+
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -117,20 +119,36 @@ public class HomeFragment extends Fragment{
         arrangeData(listTreeMap);
     }
 
+    boolean isNowMonth(AccountItem accountItem){
+        int nowYear = new CalendarUtils().getNowDate()[0];
+        //获取本年的年份
+        int nowMonth = new CalendarUtils().getNowDate()[1] + 1;
+        //获取本月的月份
+        if(accountItem.getDate().get(Calendar.YEAR) == nowYear
+                && accountItem.getDate().get(Calendar.MONTH) + 1 == nowMonth){
+            return true;
+        }
+        else return false;
+    }
+
     private void arrangeData(TreeMap<String, List<HomeItem>> treeMap){
-        //加载数据库
+        //加载数据库，注意数据库中目前只有账目的数据
         DataUtils dataUtils = new DataUtils(this.getActivity());
         dataUtils.loadItemData(listTreeMap);
         //重整为要传入Adapter的数据源mHomeItemList
         mHomeItemList.clear();
+        MonthTotalItem monthTotalItem = new MonthTotalItem(0,0);
+        mHomeItemList.add(monthTotalItem);
+        //第一项是本月统计
+        double monthIncome = 0, monthExpend = 0;
+
         Iterator<Map.Entry<String,List<HomeItem>>> it = treeMap.entrySet().iterator();
         while(it.hasNext()){
             Map.Entry<String,List<HomeItem>> entry = it.next();
             List<HomeItem> homeItems = entry.getValue();
             //获取对应的homeItem列表
             Calendar calendar = ((AccountItem)homeItems.get(0)).getDate();
-            //TODO:当日小结金额显示
-            DayTotalItem dayTotalItem = new DayTotalItem(calendar,100,100);
+            DayTotalItem dayTotalItem = new DayTotalItem(calendar,0,0);
             mHomeItemList.add(dayTotalItem);
             //加入对应日期Item
             double incomeSubTotal = 0, expendSubTotal = 0;
@@ -138,13 +156,19 @@ public class HomeFragment extends Fragment{
                 mHomeItemList.add(homeItems.get(i));
                 AccountItem accountItem = ((AccountItem)homeItems.get(i));
                 if(accountItem.getType()==0){
-                    expendSubTotal += ((AccountItem)homeItems.get(i)).getAccount();
+                    expendSubTotal += accountItem.getAccount();
+                    if(isNowMonth(accountItem)){
+                        monthExpend += accountItem.getAccount();
+                    }
                 }
                 else {
-                    incomeSubTotal += ((AccountItem)homeItems.get(i)).getAccount();
+                    incomeSubTotal += accountItem.getAccount();
+                    if(isNowMonth(accountItem)){
+                        monthIncome += accountItem.getAccount();
+                    }
                 }
             }
-            //笨办法，等数据库熟练了再优化
+            //更新日统计数据。笨办法，等数据库熟练了再优化
             if(mHomeItemList.get(mHomeItemList.size()- homeItems.size()-1) instanceof DayTotalItem){
                 Log.e("HomeFragment","DayTotalItem position正确");
                 dayTotalItem = (DayTotalItem) mHomeItemList.get(mHomeItemList.size()-homeItems.size()-1);
@@ -155,6 +179,11 @@ public class HomeFragment extends Fragment{
                 Log.e("HomeFragment","DayTotalItem position不对");
             }
         }
+
+        //更新月统计数据
+        ((MonthTotalItem)mHomeItemList.get(0)).setExpend(monthExpend);
+        ((MonthTotalItem)mHomeItemList.get(0)).setIncome(monthIncome);
+
         //debug
         for(int i = 0;i < mHomeItemList.size();i++){
             if(mHomeItemList.get(i) instanceof AccountItem){
@@ -164,7 +193,7 @@ public class HomeFragment extends Fragment{
                         +" "+accountItem.getAccount()
                         +" "+accountItem.getTagDate());
             }
-            else{
+            else if(mHomeItemList.get(i) instanceof DayTotalItem){
                 DayTotalItem dayTotalItem = (DayTotalItem) mHomeItemList.get(i);
                 Log.e("HomeFragment", dayTotalItem.getPrintDate());
             }
@@ -234,24 +263,29 @@ public class HomeFragment extends Fragment{
                 viewHolder.icon.setBackgroundResource(accountItem.getIcon(accountItem.getReason()));
                 viewHolder.reason.setText(accountItem.getTitle(HomeFragment.this.getContext(),accountItem.getReason()));
                 if(accountItem.getType()==0) {
-                    viewHolder.account.setText("-"+accountItem.getAccount());
+                    viewHolder.account.setText("-"+String.format("%.2f",accountItem.getAccount()));
                     viewHolder.account.setTextColor(getResources().getColor(R.color.expend));
                 }
                 else{
-                    viewHolder.account.setText("+"+accountItem.getAccount());
+                    viewHolder.account.setText("+"+String.format("%.2f",accountItem.getAccount()));
                     viewHolder.account.setTextColor(getResources().getColor(R.color.income));
                 }
             }
             else if(holder instanceof MonthTotalItemHolder){
                 MonthTotalItemHolder viewHolder = (MonthTotalItemHolder) holder;
-                //TODO
+                MonthTotalItem monthTotalItem = (MonthTotalItem) adpList.get(position);
+                viewHolder.expend.setText("-" + String.format("%.2f",monthTotalItem.getExpend()));
+                viewHolder.income.setText("+" + String.format("%.2f",monthTotalItem.getIncome()));
+                viewHolder.expend.setTextColor(getResources().getColor(R.color.expend));
+                viewHolder.income.setTextColor(getResources().getColor(R.color.income));
+                //TODO: viewHolder.total.setText();
             }
             else if(holder instanceof DayTotalItemHolder){
                 DayTotalItemHolder viewHolder = (DayTotalItemHolder) holder;
                 DayTotalItem dayTotalItem = (DayTotalItem) adpList.get(position);
                 viewHolder.date.setText(dayTotalItem.getPrintDate());
-                viewHolder.expend.setText("支: "+dayTotalItem.getExpendSubTotal());
-                viewHolder.income.setText("收: "+dayTotalItem.getIncomeSubTotal());
+                viewHolder.expend.setText("支: "+String.format("%.2f",dayTotalItem.getExpendSubTotal()));
+                viewHolder.income.setText("收: "+String.format("%.2f",dayTotalItem.getIncomeSubTotal()));
             }
         }
 
@@ -283,11 +317,15 @@ public class HomeFragment extends Fragment{
             }
         }
         class MonthTotalItemHolder extends RecyclerView.ViewHolder{
-
+            TextView total;
+            TextView income;
+            TextView expend;
             public MonthTotalItemHolder(@NonNull View itemView) {
                 super(itemView);
+                total = itemView.findViewById(R.id.tv_total);
+                income = itemView.findViewById(R.id.tv_monthtotal_income);
+                expend = itemView.findViewById(R.id.tv_monthtotal_expend);
             }
-            //TODO
         }
     }
 }
