@@ -9,25 +9,24 @@ import java.util.Calendar;
 public class AccountItem extends HomeItem {
     private int icon;
     private int reason;
-    private int account;
+    private double account;
     private int type; //0支出 1收入
     private Calendar date;
 
-
-    public AccountItem(int reason, int account, int year,int month,int date) {
+    public AccountItem(int reason, double account, int year,int month,int date) {
         this.icon = getIcon(reason);
         this.reason = reason;
         this.account = account;
-        this.type = getType(reason);
+        this.type = getType();
         this.date = Calendar.getInstance();
         this.date.set(year, month, date);
     }
 
-    public AccountItem(int reason,int account,Calendar calendar){
+    public AccountItem(int reason, double account,Calendar calendar){
         this.icon = getIcon(reason);
         this.reason = reason;
         this.account = account;
-        this.type = getType(reason);
+        this.type = getType();
         this.date = calendar;
     }
 
@@ -102,8 +101,8 @@ public class AccountItem extends HomeItem {
         }
     }
 
-    public int getType(int reason){
-        if(reason<=10) return 0;
+    public int getType(){
+        if(this.reason<=10) return 0;
         else return 1;
     }
 
@@ -112,11 +111,11 @@ public class AccountItem extends HomeItem {
         this.icon = icon;
     }
 
-    public int getAccount() {
+    public double getAccount() {
         return account;
     }
 
-    public void setAccount(int account) {
+    public void setAccount(double account) {
         this.account = account;
     }
     public int getReason(){

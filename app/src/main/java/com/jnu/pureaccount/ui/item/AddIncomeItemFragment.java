@@ -28,7 +28,7 @@ import com.jnu.pureaccount.utils.KeyBoardUtils;
 public class AddIncomeItemFragment extends Fragment implements View.OnClickListener{
 
     public int selectItem;
-    public int account;
+    public double account;
     public String selectDate;
     private LinearLayout linearLayout;
     private ImageButton btnSalary, btnWinning, btnInvestment, btnBusiness;
@@ -84,7 +84,7 @@ public class AddIncomeItemFragment extends Fragment implements View.OnClickListe
                 }
                 else {
                     DataUtils dataUtils = new DataUtils(getActivity());
-                    dataUtils.InsertItemData(selectItem, Integer.parseInt(accountEdit.getText().toString()), selectDate);
+                    dataUtils.InsertItemData(selectItem, Double.parseDouble(accountEdit.getText().toString()), selectDate);
                     Log.e("AddIncomeItemFragment","selectDate: "+selectDate);
                     getActivity().finish();
                 }

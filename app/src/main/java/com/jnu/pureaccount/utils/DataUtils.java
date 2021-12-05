@@ -35,7 +35,7 @@ public class DataUtils {
         Cursor cursor = sqLiteDatabase.query("item",new String[]{"reason","account","date","type"}, null,null,null,null,null);
         while(cursor.moveToNext()){
             int reason = cursor.getInt(cursor.getColumnIndexOrThrow("reason"));
-            int account = cursor.getInt(cursor.getColumnIndexOrThrow("account"));
+            double account = cursor.getDouble(cursor.getColumnIndexOrThrow("account"));
             String date = cursor.getString(cursor.getColumnIndexOrThrow("date"));
             int type = cursor.getInt(cursor.getColumnIndexOrThrow("type"));
             try {
@@ -45,13 +45,13 @@ public class DataUtils {
                 updateData(listTreeMap, accountItem);
                 //插入到TreeMap中
             } catch (ParseException e) {
-                Log.e("MYTAG",e.getMessage());
+                Log.e("DataUtils",e.getMessage());
             }
         }
     }
 
     //插入一条账目数据
-    public void InsertItemData(int reason, int account, String date){
+    public void InsertItemData(int reason, double account, String date){
         SQLiteOpenHelper sqLiteOpenHelper = new DatabaseHelper(context,dbName,null,dbVersion);
         SQLiteDatabase sqLiteDatabase = sqLiteOpenHelper.getWritableDatabase();
 

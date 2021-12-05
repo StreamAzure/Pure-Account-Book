@@ -71,6 +71,7 @@ public class HomeFragment extends Fragment{
         //数据一多必出问题……但是position也很难用时间复杂度更好的方法获得，先将就一下吧
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
@@ -132,8 +133,26 @@ public class HomeFragment extends Fragment{
             DayTotalItem dayTotalItem = new DayTotalItem(calendar,100,100);
             mHomeItemList.add(dayTotalItem);
             //加入对应日期Item
+            double incomeSubTotal = 0, expendSubTotal = 0;
             for(int i = 0 ;i < homeItems.size();i++){
                 mHomeItemList.add(homeItems.get(i));
+                AccountItem accountItem = ((AccountItem)homeItems.get(i));
+                if(accountItem.getType()==0){
+                    expendSubTotal += ((AccountItem)homeItems.get(i)).getAccount();
+                }
+                else {
+                    incomeSubTotal += ((AccountItem)homeItems.get(i)).getAccount();
+                }
+            }
+            //笨办法，等数据库熟练了再优化
+            if(mHomeItemList.get(mHomeItemList.size()- homeItems.size()-1) instanceof DayTotalItem){
+                Log.e("HomeFragment","DayTotalItem position正确");
+                dayTotalItem = (DayTotalItem) mHomeItemList.get(mHomeItemList.size()-homeItems.size()-1);
+                dayTotalItem.setExpendSubTotal(expendSubTotal);
+                dayTotalItem.setIncomeSubTotal(incomeSubTotal);
+            }
+            else{
+                Log.e("HomeFragment","DayTotalItem position不对");
             }
         }
         //debug
@@ -214,7 +233,14 @@ public class HomeFragment extends Fragment{
                 AccountItem accountItem = (AccountItem) adpList.get(position);
                 viewHolder.icon.setBackgroundResource(accountItem.getIcon(accountItem.getReason()));
                 viewHolder.reason.setText(accountItem.getTitle(HomeFragment.this.getContext(),accountItem.getReason()));
-                viewHolder.account.setText(accountItem.getAccount()+"");
+                if(accountItem.getType()==0) {
+                    viewHolder.account.setText("-"+accountItem.getAccount());
+                    viewHolder.account.setTextColor(getResources().getColor(R.color.expend));
+                }
+                else{
+                    viewHolder.account.setText("+"+accountItem.getAccount());
+                    viewHolder.account.setTextColor(getResources().getColor(R.color.income));
+                }
             }
             else if(holder instanceof MonthTotalItemHolder){
                 MonthTotalItemHolder viewHolder = (MonthTotalItemHolder) holder;
@@ -224,8 +250,8 @@ public class HomeFragment extends Fragment{
                 DayTotalItemHolder viewHolder = (DayTotalItemHolder) holder;
                 DayTotalItem dayTotalItem = (DayTotalItem) adpList.get(position);
                 viewHolder.date.setText(dayTotalItem.getPrintDate());
-                viewHolder.expend.setText(dayTotalItem.getExpendSubTotal()+"");
-                viewHolder.income.setText(dayTotalItem.getIncomeSubTotal()+"");
+                viewHolder.expend.setText("支: "+dayTotalItem.getExpendSubTotal());
+                viewHolder.income.setText("收: "+dayTotalItem.getIncomeSubTotal());
             }
         }
 
@@ -255,7 +281,6 @@ public class HomeFragment extends Fragment{
                 income = itemView.findViewById(R.id.tv_item_daytotal_income);
                 expend = itemView.findViewById(R.id.tv_item_daytotal_expend);
             }
-
         }
         class MonthTotalItemHolder extends RecyclerView.ViewHolder{
 

@@ -10,6 +10,9 @@
     <color name="button_yellow">#FFD64E</color>
     <color name="background">#F1F2F6</color>
 
+    <color name="income">#E91E63</color>
+    <color name="expend">#4CAF50</color>
+
     <color name="salary">#F59292</color>
     <color name="winning">#8583D8</color>
     <color name="investment">#E6B673</color>

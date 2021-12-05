@@ -18,9 +18,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         //SQLite 没有一个单独的用于存储日期和/或时间的存储类，但 SQLite 能够把日期和时间存储为 TEXT值
-        String sql = "create table item(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, reason int, account int, date text, type int)";
-        db.execSQL(sql);
+        String sql1 = "create table item(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, reason int, account double, date text, type int)";
+        //String sql2 = "create table daysum(date text, income double, expend double)";
+        //创建单日收支记录表
+        db.execSQL(sql1);
         //执行sql语句
+        //db.execSQL(sql2);
     }
 
     @Override

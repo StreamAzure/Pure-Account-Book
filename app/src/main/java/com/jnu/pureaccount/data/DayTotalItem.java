@@ -5,10 +5,10 @@ import java.util.Calendar;
 //小计类（时间、当天小计）
 public class DayTotalItem extends HomeItem {
     private Calendar date;
-    private int incomeSubTotal;
-    private int expendSubTotal;
+    private double incomeSubTotal;
+    private double expendSubTotal;
 
-    public DayTotalItem(Calendar date, int incomeSubTotal, int expendSubTotal){
+    public DayTotalItem(Calendar date, double incomeSubTotal, double expendSubTotal){
         this.date = date;
         this.incomeSubTotal = incomeSubTotal;
         this.expendSubTotal = expendSubTotal;
@@ -22,19 +22,19 @@ public class DayTotalItem extends HomeItem {
         this.date = date;
     }
 
-    public int getIncomeSubTotal() {
+    public double getIncomeSubTotal() {
         return incomeSubTotal;
     }
 
-    public void setIncomeSubTotal(int incomeSubTotal) {
+    public void setIncomeSubTotal(double incomeSubTotal) {
         this.incomeSubTotal = incomeSubTotal;
     }
 
-    public int getExpendSubTotal() {
+    public double getExpendSubTotal() {
         return expendSubTotal;
     }
 
-    public void setExpendSubTotal(int expendSubTotal) {
+    public void setExpendSubTotal(double expendSubTotal) {
         this.expendSubTotal = expendSubTotal;
     }
 

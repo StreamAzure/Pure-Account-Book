@@ -32,7 +32,7 @@ import com.jnu.pureaccount.utils.LogUtils;
 public class AddExpendItemFragment extends Fragment implements View.OnClickListener {
 
     public int selectItem;
-    public int account;
+    public double account;
     public String selectDate;
     private LinearLayout linearLayout;
     private ImageButton btnFood, btnEntertainment, btnClothes, btnPet, btnHouseRent, btnMedicine, btnShopping, btnTraffic, btnTour, btnStudy;
@@ -88,7 +88,7 @@ public class AddExpendItemFragment extends Fragment implements View.OnClickListe
                 }
                 else {
                     DataUtils dataUtils = new DataUtils(getActivity());
-                    dataUtils.InsertItemData(selectItem, Integer.parseInt(accountEdit.getText().toString()), selectDate);
+                    dataUtils.InsertItemData(selectItem, Double.parseDouble(accountEdit.getText().toString()), selectDate);
                     Log.e("AddExpendItemFragment","selectDate: "+selectDate);
                     getActivity().finish();
                 }
