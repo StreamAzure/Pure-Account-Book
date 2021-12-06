@@ -112,6 +112,13 @@ public class AccountItem extends HomeItem {
         else return 1;
     }
 
+    public String getPrintType(){
+        if(type==0){
+            return "支出";
+        }
+        else return "收入";
+    }
+
 
     public void setIcon(int icon) {
         this.icon = icon;

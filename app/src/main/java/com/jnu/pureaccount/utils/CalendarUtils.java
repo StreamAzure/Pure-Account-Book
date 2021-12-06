@@ -43,7 +43,7 @@ public class CalendarUtils {
     public String getNowTimeString(){
         //获取当前时间，24小时制，精确到毫秒，格式yyyy-MM-dd HH-mm-ss-SSS
         Date date = new Date();
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss-SSS");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS");
         return format.format(date);
     }
 

@@ -1,8 +1,10 @@
 package com.jnu.pureaccount.event;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -11,6 +13,8 @@ import com.jnu.pureaccount.R;
 import com.jnu.pureaccount.utils.AndroidBarUtils;
 
 public class ShowItemActivity extends AppCompatActivity {
+    TextView tvAccount,tvReason,tvType,tvDate,tvCreateTime,tvRemarks;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,5 +40,18 @@ public class ShowItemActivity extends AppCompatActivity {
                 //否则观感比较违和
             }
         });
+
+        tvAccount = findViewById(R.id.account);
+        tvReason = findViewById(R.id.reason);
+        tvType = findViewById(R.id.type);
+        tvDate = findViewById(R.id.date);
+        tvCreateTime = findViewById(R.id.createtime);
+
+        Intent intent = getIntent();
+        tvAccount.setText(intent.getDoubleExtra("account",0.00)+"");
+        tvReason.setText(intent.getStringExtra("reason"));
+        tvType.setText(intent.getStringExtra("type"));
+        tvDate.setText(intent.getStringExtra("date"));
+        tvCreateTime.setText(intent.getStringExtra("createTime").substring(0,19));
     }
 }
