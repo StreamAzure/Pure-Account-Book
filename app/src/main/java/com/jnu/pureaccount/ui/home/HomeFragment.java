@@ -208,6 +208,9 @@ public class HomeFragment extends Fragment{
             }
         }
         Log.e("HomeFragment","==============结束==============");
+        dataUtils.QueryTable("daysum");
+        dataUtils.QueryTable("monthsum");
+        dataUtils.QueryTable("yearsum");
     }
 
     @Override

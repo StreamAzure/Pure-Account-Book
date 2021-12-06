@@ -130,4 +130,27 @@ public class DataUtils {
             listTreeMap.put(accountItem.getTagDate(),homeItemList);
         }
     }
+
+    public void QueryTable(String tableName){
+        SQLiteOpenHelper sqLiteOpenHelper = new DatabaseHelper(context,dbName,null,dbVersion);
+        SQLiteDatabase sqLiteDatabase = sqLiteOpenHelper.getReadableDatabase();
+        Cursor result=sqLiteDatabase.rawQuery("select * from "+tableName,new String[]{});
+        result.moveToFirst();
+        while (!result.isAfterLast()) {
+            if(tableName.equals("daysum")) {
+                Log.e("DataUtils", tableName + "： " + result.getInt(0) + " " + result.getInt(1) + " " +
+                        result.getInt(2) + " income:" + result.getDouble(3) + " expend:" + result.getDouble(4));
+            }
+            else if(tableName.equals("monthsum")){
+                Log.e("DataUtils", tableName + "： " + result.getInt(0) + " " + result.getInt(1) + " income:" +
+                        result.getDouble(2) + " expend:" + result.getDouble(3));
+            }
+            else if(tableName.equals("yearsum")){
+                Log.e("DataUtils", tableName + "： " + result.getInt(0) + " income:" + result.getDouble(1) + " expend:" +
+                        result.getDouble(2) + " ");
+            }
+            result.moveToNext();
+        }
+        result.close();
+    }
 }
