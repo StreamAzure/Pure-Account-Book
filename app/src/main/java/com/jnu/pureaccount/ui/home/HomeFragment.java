@@ -348,6 +348,11 @@ public class HomeFragment extends Fragment{
                         break;
                     case MENU_ITEM_DETAIL:
                         intent = new Intent(getActivity(), ShowItemActivity.class);
+                        intent.putExtra("account",accountItem.getAccount());
+                        intent.putExtra("reason",accountItem.getTitle(getContext()));
+                        intent.putExtra("type",accountItem.getPrintType());
+                        intent.putExtra("date",accountItem.getTagDate());
+                        intent.putExtra("createTime", accountItem.getCreateTime());
                         startActivity(intent);
                         break;
                     case MENU_ITEM_DELETE:
