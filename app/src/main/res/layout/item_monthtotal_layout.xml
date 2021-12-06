@@ -15,8 +15,8 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="净资产"
-            android:textSize="13sp"
+            android:text="年度收支"
+            android:textSize="15sp"
             android:paddingTop="15dp"
             android:gravity="center_horizontal"/>
 
@@ -25,8 +25,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="3424324"
-            android:padding="15dp"
-            android:textSize="20sp"
+            android:padding="10dp"
+            android:textSize="25sp"
             android:gravity="center_horizontal"/>
     </LinearLayout>
 

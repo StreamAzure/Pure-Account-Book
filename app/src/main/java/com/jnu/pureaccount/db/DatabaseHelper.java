@@ -22,6 +22,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         //item表：创建日期，类型代号，金额，类型，账目日期，账目年，账目月，账目日
         String sql2 = "create table daysum(year int, month int, day int, income double, expend double)";
         //单日收支记录表daysum：账目日期，收入，支出
+        //千万不要动这个顺序！！查询的时候按列查询的！！
         String sql3 = "create table monthsum(year int, month int, income double, expend double)";
         //月收支记录表monthsum：账目年，账目月，收入，支出
         String sql4 = "create table yearsum(year int, income double, expend double)";

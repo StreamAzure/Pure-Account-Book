@@ -67,7 +67,6 @@ import java.util.TreeMap;
 public class HomeFragment extends Fragment{
     public static final int RESULT_CODE_ADD_OK = 200;
     private RecyclerView recyclerView;
-
     HomeItemAdapter mAdapter;
     TreeMap<String,List<HomeItem>> listTreeMap;
     //先用一个Map进行管理，若干个日期为键，一个日期对应一组列表，每组列表以一个DayTotalItem开头
@@ -142,75 +141,58 @@ public class HomeFragment extends Fragment{
     }
 
     private void arrangeData(TreeMap<String, List<HomeItem>> treeMap){
-        //加载数据库，注意数据库中目前只有账目的数据
+        //加载数据库item表中的数据
         DataUtils dataUtils = new DataUtils(this.getActivity());
         dataUtils.loadItemData(listTreeMap);
         //重整为要传入Adapter的数据源mHomeItemList
         mHomeItemList.clear();
         MonthTotalItem monthTotalItem = new MonthTotalItem(0,0);
+        monthTotalItem.setMonth(new CalendarUtils().getNowMonth());
+        monthTotalItem.setYear(new CalendarUtils().getNowYear());
         mHomeItemList.add(monthTotalItem);
-        //第一项是本月统计
-        double monthIncome = 0, monthExpend = 0;
+        //顶部月统计，默认是当月
 
         Iterator<Map.Entry<String,List<HomeItem>>> it = treeMap.entrySet().iterator();
         while(it.hasNext()){
             Map.Entry<String,List<HomeItem>> entry = it.next();
-            List<HomeItem> homeItems = entry.getValue();
-            //获取对应的homeItem列表
-            Calendar calendar = ((AccountItem)homeItems.get(0)).getDate();
+            List<HomeItem> homeItems = entry.getValue();//获取该日对应的homeItem列表
+            Calendar calendar = ((AccountItem)homeItems.get(0)).getDate();//从列表中的一项获得该日日期
             DayTotalItem dayTotalItem = new DayTotalItem(calendar,0,0);
-            mHomeItemList.add(dayTotalItem);
-            //加入对应日期Item
-            double incomeSubTotal = 0, expendSubTotal = 0;
-            for(int i = 0 ;i < homeItems.size();i++){
-                mHomeItemList.add(homeItems.get(i));
-                AccountItem accountItem = ((AccountItem)homeItems.get(i));
-                if(accountItem.getType()==0){
-                    expendSubTotal += accountItem.getAccount();
-                    if(isNowMonth(accountItem)){
-                        monthExpend += accountItem.getAccount();
-                    }
-                }
-                else {
-                    incomeSubTotal += accountItem.getAccount();
-                    if(isNowMonth(accountItem)){
-                        monthIncome += accountItem.getAccount();
-                    }
-                }
-            }
-            //更新日统计数据。笨办法，等数据库熟练了再优化
+            mHomeItemList.add(dayTotalItem);//加入当前遍历到的日期Item
+            mHomeItemList.addAll(homeItems);
             if(mHomeItemList.get(mHomeItemList.size()- homeItems.size()-1) instanceof DayTotalItem){
-                //Log.e("HomeFragment","DayTotalItem position正确");
                 dayTotalItem = (DayTotalItem) mHomeItemList.get(mHomeItemList.size()-homeItems.size()-1);
-                dayTotalItem.setExpendSubTotal(expendSubTotal);
-                dayTotalItem.setIncomeSubTotal(incomeSubTotal);
+                dayTotalItem.setExpendSubTotal(dataUtils.getDayExpend(dayTotalItem.getDate()));
+                dayTotalItem.setIncomeSubTotal(dataUtils.getDayIncome(dayTotalItem.getDate()));
             }
         }
+        monthTotalItem.setExpend(dataUtils.getMonthExpend(monthTotalItem.getYear(),monthTotalItem.getMonth()));
+        monthTotalItem.setIncome(dataUtils.getMonthIncome(monthTotalItem.getYear(),monthTotalItem.getMonth()));
 
-        //更新月统计数据
-        ((MonthTotalItem)mHomeItemList.get(0)).setExpend(monthExpend);
-        ((MonthTotalItem)mHomeItemList.get(0)).setIncome(monthIncome);
+        double total = dataUtils.getYearIncome(monthTotalItem.getYear()) - dataUtils.getYearExpend(monthTotalItem.getYear());
+        monthTotalItem.setTotal(total);
+        //顶部月统计，默认是当月
 
         //debug
-        Log.e("HomeFragment","===========账目全部信息===========");
-        for(int i = 0;i < mHomeItemList.size();i++){
-            if(mHomeItemList.get(i) instanceof AccountItem){
-                AccountItem accountItem = (AccountItem) mHomeItemList.get(i);
-                Log.e("HomeFragment",
-                        accountItem.getTitle(getContext(),accountItem.getReason())
-                        +" "+accountItem.getAccount()
-                        +" TagTime:"+accountItem.getTagDate()
-                        +" CreateTime:"+accountItem.getCreateTime());
-            }
-            else if(mHomeItemList.get(i) instanceof DayTotalItem){
-                DayTotalItem dayTotalItem = (DayTotalItem) mHomeItemList.get(i);
-                Log.e("HomeFragment", dayTotalItem.getPrintDate());
-            }
-        }
-        Log.e("HomeFragment","==============结束==============");
-        dataUtils.QueryTable("daysum");
-        dataUtils.QueryTable("monthsum");
-        dataUtils.QueryTable("yearsum");
+//        Log.e("HomeFragment","===========账目全部信息===========");
+//        for(int i = 0;i < mHomeItemList.size();i++){
+//            if(mHomeItemList.get(i) instanceof AccountItem){
+//                AccountItem accountItem = (AccountItem) mHomeItemList.get(i);
+//                Log.e("HomeFragment",
+//                        accountItem.getTitle(getContext(),accountItem.getReason())
+//                        +" "+accountItem.getAccount()
+//                        +" TagTime:"+accountItem.getTagDate()
+//                        +" CreateTime:"+accountItem.getCreateTime());
+//            }
+//            else if(mHomeItemList.get(i) instanceof DayTotalItem){
+//                DayTotalItem dayTotalItem = (DayTotalItem) mHomeItemList.get(i);
+//                Log.e("HomeFragment", dayTotalItem.getPrintDate());
+//            }
+//        }
+//        Log.e("HomeFragment","==============结束==============");
+//        dataUtils.QueryTable("daysum");
+//        dataUtils.QueryTable("monthsum");
+//        dataUtils.QueryTable("yearsum");
     }
 
     @Override
@@ -295,7 +277,18 @@ public class HomeFragment extends Fragment{
                 viewHolder.income.setText("+" + String.format("%.2f",monthTotalItem.getIncome()));
                 viewHolder.expend.setTextColor(getResources().getColor(R.color.expend));
                 viewHolder.income.setTextColor(getResources().getColor(R.color.income));
-                //TODO: viewHolder.total.setText();
+                if(monthTotalItem.getTotal()<0) {
+                    viewHolder.total.setText(String.format("%.2f",monthTotalItem.getTotal()));
+                    viewHolder.total.setTextColor(getResources().getColor(R.color.expend));
+                }
+                else if(monthTotalItem.getTotal()>0){
+                    viewHolder.total.setText(String.format("%.2f",monthTotalItem.getTotal()));
+                    viewHolder.total.setTextColor(getResources().getColor(R.color.income));
+                }
+                else{
+                    viewHolder.total.setText("0.00");
+                    viewHolder.total.setTextColor(getResources().getColor(R.color.black));
+                }
             }
             else if(holder instanceof DayTotalItemHolder){
                 DayTotalItemHolder viewHolder = (DayTotalItemHolder) holder;
