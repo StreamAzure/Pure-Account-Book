@@ -2,6 +2,7 @@ package com.jnu.pureaccount.utils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Month;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -12,6 +13,23 @@ public class CalendarUtils {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         return calendar;
+    }
+
+    public int[] CalenderToInt(Calendar calendar, int[] intDate){
+        intDate[0] = calendar.get(Calendar.YEAR);
+        intDate[1] = calendar.get(Calendar.MONTH)+1;
+        intDate[2] = calendar.get(Calendar.DAY_OF_MONTH);
+        return intDate;
+    }
+
+    public int getNowMonth(){
+        Calendar calendar = Calendar.getInstance();
+        return calendar.get(Calendar.MONTH) + 1;
+    }
+
+    public int getNowYear(){
+        Calendar calendar = Calendar.getInstance();
+        return calendar.get(Calendar.YEAR);
     }
 
     public String getNowDateString(){
