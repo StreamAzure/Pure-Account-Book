@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import com.jnu.pureaccount.data.AccountItem;
+import com.jnu.pureaccount.data.DayTotalItem;
 import com.jnu.pureaccount.data.HomeItem;
 import com.jnu.pureaccount.db.DatabaseHelper;
 
@@ -156,6 +157,36 @@ public class DataUtils {
         result.close();
     }
 
+    public boolean QueryDayHistory(ArrayList<HomeItem> DayList, int year,int month, int day) throws ParseException {
+        //查询某一日的所有记录
+        //当日无记录返回0，否则返回1
+        SQLiteOpenHelper sqLiteOpenHelper = new DatabaseHelper(context,dbName,null,dbVersion);
+        SQLiteDatabase sqLiteDatabase = sqLiteOpenHelper.getReadableDatabase();
+        Cursor cursor=sqLiteDatabase.rawQuery("select * from item",new String[]{});
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            DayTotalItem dayTotalItem = new DayTotalItem(new CalendarUtils().IntToCalender(year,month,day),0,0);
+            dayTotalItem.setExpendSubTotal(this.getDayExpend(dayTotalItem.getDate()));
+            dayTotalItem.setIncomeSubTotal(this.getDayIncome(dayTotalItem.getDate()));
+
+            DayList.add(dayTotalItem);
+
+            int reason = cursor.getInt(cursor.getColumnIndexOrThrow("reason"));
+            double account = cursor.getDouble(cursor.getColumnIndexOrThrow("account"));
+            String date = cursor.getString(cursor.getColumnIndexOrThrow("date"));
+            String createTime = cursor.getString(cursor.getColumnIndexOrThrow("createTime"));
+            try {
+                AccountItem accountItem = new AccountItem(reason,account,new CalendarUtils().StringToCalender(date),createTime);
+                DayList.add(accountItem);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+        cursor.close();
+        return !(DayList.isEmpty());
+    }
+
+
     public double getDayExpend(int year, int month, int day){
         SQLiteOpenHelper sqLiteOpenHelper = new DatabaseHelper(context,dbName,null,dbVersion);
         SQLiteDatabase sqLiteDatabase = sqLiteOpenHelper.getReadableDatabase();
@@ -163,7 +194,8 @@ public class DataUtils {
         Cursor result = sqLiteDatabase.rawQuery(sql,new String[]{});
         result.moveToFirst();
         //注意第4列是花费(从0开始)
-        double val = result.getDouble(4);
+        double val = 0;
+        val = result.getDouble(4);
         result.close();
         return val;
     }
@@ -187,7 +219,8 @@ public class DataUtils {
         Cursor result = sqLiteDatabase.rawQuery(sql,new String[]{});
         result.moveToFirst();
         //注意第3列是收入(从0开始)
-        double val = result.getDouble(3);
+        double val = 0;
+        val = result.getDouble(3);
         result.close();
         return val;
     }

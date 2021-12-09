@@ -15,6 +15,11 @@ public class CalendarUtils {
         return calendar;
     }
 
+    public Calendar IntToCalender(int year , int month, int day) throws ParseException {
+        String str = IntToTimeString(year,month,day);
+        return StringToCalender(str);
+    }
+
     public int[] CalenderToInt(Calendar calendar, int[] intDate){
         intDate[0] = calendar.get(Calendar.YEAR);
         intDate[1] = calendar.get(Calendar.MONTH)+1;
