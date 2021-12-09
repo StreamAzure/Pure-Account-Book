@@ -45,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
     private HomeFragment homeFragment;
     private HistoryFragment historyFragment;
     private AnalysisFragment analysisFragment;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initToolBar(){
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_navigation);
         toolbar.setTitle("纯记账");
         setSupportActionBar(toolbar);
@@ -91,18 +92,21 @@ public class MainActivity extends AppCompatActivity {
                     if(homeFragment == null) {
                         homeFragment = new HomeFragment();
                     }
+                    toolbar.setTitle("纯记账");
                     initFragment(homeFragment);
                 }
                 else if (item.getItemId()==R.id.nav_history){
                     if(historyFragment == null) {
                         historyFragment = new HistoryFragment();
                     }
+                    toolbar.setTitle("历史查看");
                     initFragment(historyFragment);
                 }
                 else if(item.getItemId() == R.id.nav_analysis){
                     if(analysisFragment == null) {
                         analysisFragment = new AnalysisFragment();
                     }
+                    toolbar.setTitle("分析统计");
                     initFragment(analysisFragment);
                 }
                 //向左收回抽屉
