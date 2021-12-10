@@ -162,15 +162,16 @@ public class DataUtils {
         //当日无记录返回0，否则返回1
         SQLiteOpenHelper sqLiteOpenHelper = new DatabaseHelper(context,dbName,null,dbVersion);
         SQLiteDatabase sqLiteDatabase = sqLiteOpenHelper.getReadableDatabase();
-        Cursor cursor=sqLiteDatabase.rawQuery("select * from item",new String[]{});
+        Cursor cursor=sqLiteDatabase.rawQuery("select * from item where year=? and month=? and day=?",new String[]{year+"",month+"",day+""});
         cursor.moveToFirst();
-        while (!cursor.isAfterLast()) {
+        if(!cursor.isAfterLast()){
             DayTotalItem dayTotalItem = new DayTotalItem(new CalendarUtils().IntToCalender(year,month,day),0,0);
             dayTotalItem.setExpendSubTotal(this.getDayExpend(dayTotalItem.getDate()));
             dayTotalItem.setIncomeSubTotal(this.getDayIncome(dayTotalItem.getDate()));
 
             DayList.add(dayTotalItem);
-
+        }
+        while (!cursor.isAfterLast()) {
             int reason = cursor.getInt(cursor.getColumnIndexOrThrow("reason"));
             double account = cursor.getDouble(cursor.getColumnIndexOrThrow("account"));
             String date = cursor.getString(cursor.getColumnIndexOrThrow("date"));
@@ -181,6 +182,7 @@ public class DataUtils {
             } catch (ParseException e) {
                 e.printStackTrace();
             }
+            cursor.moveToNext();
         }
         cursor.close();
         return !(DayList.isEmpty());

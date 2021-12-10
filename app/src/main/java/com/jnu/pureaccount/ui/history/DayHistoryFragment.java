@@ -10,6 +10,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -52,15 +53,25 @@ public class DayHistoryFragment extends Fragment {
     @Override
     public void onResume(){
         super.onResume();
+        updateData();
+    }
+
+    private void updateData(){
+        mDayList.clear();
         int[] intDate = new int[5];
         new CalendarUtils().TimeStringToInt(selectDay,intDate);
         try {
-            new DataUtils(getContext()).QueryDayHistory(mDayList, intDate[0],intDate[1],intDate[2]);
+            boolean DayListExist = new DataUtils(getContext()).QueryDayHistory(mDayList, intDate[0],intDate[1],intDate[2]);
+            if(!DayListExist) recyclerView.setVisibility(View.GONE);
         } catch (ParseException e) {
             e.printStackTrace();
         }
         mAdapter.notifyDataSetChanged();
         //数据一多必出问题……但是position也很难用时间复杂度更好的方法获得，先将就一下吧
+    }
+
+    public void onStart() {
+        super.onStart();
     }
 
     public DayHistoryFragment() {
@@ -85,7 +96,7 @@ public class DayHistoryFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_month_history, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_day_history, container, false);
         mDayList = new ArrayList<>();
         initRecyclerView(rootView);
         initFloatingActionButton(rootView);
@@ -102,18 +113,20 @@ public class DayHistoryFragment extends Fragment {
     }
 
     private void initFloatingActionButton(View view){
-        floatingActionButton = view.findViewById(R.id.fab_choose_month);
+        floatingActionButton = view.findViewById(R.id.fab_choose_day);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Calendar c = Calendar.getInstance();
-                new DatePickerDialog(getActivity(), 0, new DatePickerDialog.OnDateSetListener() {
+                DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(), 0, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker startDatePicker, int startYear, int startMonthOfYear, int startDayOfMonth) {
                         selectDay = new CalendarUtils().IntToTimeString(startYear,startMonthOfYear+1,startDayOfMonth);
                         Log.e("stream",selectDay);
+                        updateData();//在这里刷新数据就很好
                     }
-                }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DATE)).show();
+                }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DATE));
+                datePickerDialog.show();
             }
         });
     }

@@ -43,8 +43,8 @@ public class MonthHistoryFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_day_history, container, false);
-        floatingActionButton = rootView.findViewById(R.id.fab_choose_day);
+        View rootView = inflater.inflate(R.layout.fragment_month_history, container, false);
+        floatingActionButton = rootView.findViewById(R.id.fab_choose_month);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
