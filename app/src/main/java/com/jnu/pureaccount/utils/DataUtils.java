@@ -271,7 +271,7 @@ public class DataUtils {
         result.moveToFirst();
         //注意第4列是花费(从0开始)
         double val = 0;
-        val = result.getDouble(4);
+        if(!result.isAfterLast()) val = result.getDouble(4);
         result.close();
         return val;
     }
@@ -296,7 +296,7 @@ public class DataUtils {
         result.moveToFirst();
         //注意第3列是收入(从0开始)
         double val = 0;
-        val = result.getDouble(3);
+        if(!result.isAfterLast()) val = result.getDouble(3);
         result.close();
         return val;
     }
@@ -319,7 +319,8 @@ public class DataUtils {
         String sql = "select * from monthsum where year="+year+" and month="+month+";";
         Cursor result = sqLiteDatabase.rawQuery(sql,new String[]{});
         result.moveToFirst();
-        double val = result.getDouble(2);
+        double val = 0;
+        if(!result.isAfterLast()) val = result.getDouble(2);
         result.close();
         return val;
     }
@@ -330,7 +331,8 @@ public class DataUtils {
         String sql = "select * from monthsum where year="+year+" and month="+month+";";
         Cursor result = sqLiteDatabase.rawQuery(sql,new String[]{});
         result.moveToFirst();
-        double val = result.getDouble(3);
+        double val = 0;
+        if(!result.isAfterLast()) val = result.getDouble(3);
         result.close();
         return val;
     }
@@ -341,7 +343,8 @@ public class DataUtils {
         String sql = "select * from yearsum where year="+year+";";
         Cursor result = sqLiteDatabase.rawQuery(sql,new String[]{});
         result.moveToFirst();
-        double val = result.getDouble(1);
+        double val = 0;
+        if(!result.isAfterLast()) val = result.getDouble(1);
         result.close();
         return val;
     }
@@ -352,7 +355,8 @@ public class DataUtils {
         String sql = "select * from yearsum where year="+year+";";
         Cursor result = sqLiteDatabase.rawQuery(sql,new String[]{});
         result.moveToFirst();
-        double val = result.getDouble(2);
+        double val = 0;
+        if(!result.isAfterLast()) val = result.getDouble(2);
         result.close();
         return val;
     }
