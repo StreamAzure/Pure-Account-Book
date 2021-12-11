@@ -15,7 +15,9 @@ import com.jnu.pureaccount.db.DatabaseHelper;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.TreeMap;
 
 public class DataUtils {
@@ -157,20 +159,92 @@ public class DataUtils {
         result.close();
     }
 
-    public boolean QueryDayHistory(ArrayList<HomeItem> DayList, int year,int month, int day) throws ParseException {
-        //查询某一日的所有记录
-        //当日无记录返回0，否则返回1
+    /**
+     * @description 查询某一日的所有记录
+     * @return 当日无记录返回0，否则返回1
+     * @throws ParseException
+     */
+    public boolean QueryDayHistory(ArrayList<HomeItem> dayList, TreeMap<String,List<HomeItem>> listTreeMap, int year,int month, int day) throws ParseException {
+        QueryHistory(listTreeMap,"day",year,month,day);
+        dayList.clear();
+        Iterator<Map.Entry<String,List<HomeItem>>> it = listTreeMap.entrySet().iterator();
+        if(it.hasNext()){
+            DayTotalItem dayTotalItem = new DayTotalItem(new CalendarUtils().IntToCalender(year,month,day),
+                    getDayIncome(year, month, day),getDayExpend(year, month, day));
+            dayList.add(dayTotalItem);
+        }
+        while(it.hasNext()){
+            Map.Entry<String,List<HomeItem>> entry = it.next();
+            List<HomeItem> homeItems = entry.getValue();//获取该日对应的homeItem列表
+            dayList.addAll(homeItems);
+        }
+        return true;
+    }
+
+    /**
+     * @description 查询某一月的所有记录
+     * @return 当日无记录返回0，否则返回1
+     * @throws ParseException
+     */
+    public boolean QueryMonthHistory(ArrayList<HomeItem> monthList, TreeMap<String,List<HomeItem>> listTreeMap, int year, int month) {
+        QueryHistory(listTreeMap,"month",year,month);
+        monthList.clear();
+        Iterator<Map.Entry<String,List<HomeItem>>> it = listTreeMap.entrySet().iterator();
+        while(it.hasNext()){
+            Map.Entry<String,List<HomeItem>> entry = it.next();
+            List<HomeItem> homeItems = entry.getValue();//获取该日对应的homeItem列表
+            Calendar calendar = ((AccountItem)homeItems.get(0)).getDate();//从列表中的一项获得该日日期
+            DayTotalItem dayTotalItem = new DayTotalItem(calendar,
+                    getDayIncome(calendar),getDayExpend(calendar));
+            monthList.add(dayTotalItem);//加入当前遍历到的日期Item
+            monthList.addAll(homeItems);
+        }
+        return true;
+    }
+
+    public boolean QueryYearHistory(ArrayList<HomeItem> yearList, TreeMap<String,List<HomeItem>> listTreeMap,int year){
+        QueryHistory(listTreeMap,"year",year);
+        yearList.clear();
+        Iterator<Map.Entry<String,List<HomeItem>>> it = listTreeMap.entrySet().iterator();
+        while(it.hasNext()){
+            Map.Entry<String,List<HomeItem>> entry = it.next();
+            List<HomeItem> homeItems = entry.getValue();//获取该日对应的homeItem列表
+            Calendar calendar = ((AccountItem)homeItems.get(0)).getDate();//从列表中的一项获得该日日期
+            DayTotalItem dayTotalItem = new DayTotalItem(calendar,
+                    getDayIncome(calendar),getDayExpend(calendar));
+            yearList.add(dayTotalItem);//加入当前遍历到的日期Item
+            yearList.addAll(homeItems);
+        }
+        return true;
+    }
+
+    /**
+     * @param queryType "day", "month", "year"
+     * @return 一个TreeMap，按日期从新到旧排序，只包含账目信息
+     */
+    public boolean QueryHistory(TreeMap<String,List<HomeItem>> listTreeMap, String queryType, int... queryDate){
+        listTreeMap.clear();//这里清空了红黑树
+
         SQLiteOpenHelper sqLiteOpenHelper = new DatabaseHelper(context,dbName,null,dbVersion);
         SQLiteDatabase sqLiteDatabase = sqLiteOpenHelper.getReadableDatabase();
-        Cursor cursor=sqLiteDatabase.rawQuery("select * from item where year=? and month=? and day=?",new String[]{year+"",month+"",day+""});
-        cursor.moveToFirst();
-        if(!cursor.isAfterLast()){
-            DayTotalItem dayTotalItem = new DayTotalItem(new CalendarUtils().IntToCalender(year,month,day),0,0);
-            dayTotalItem.setExpendSubTotal(this.getDayExpend(dayTotalItem.getDate()));
-            dayTotalItem.setIncomeSubTotal(this.getDayIncome(dayTotalItem.getDate()));
-
-            DayList.add(dayTotalItem);
+        Cursor cursor;
+        switch (queryType){
+            case "day":
+                cursor = sqLiteDatabase.rawQuery("select * from item where year=? and month=? and day=?",
+                        new String[]{queryDate[0]+"",queryDate[1]+"",queryDate[2]+""});
+                break;
+            case "month":
+                cursor = sqLiteDatabase.rawQuery("select * from item where year=? and month=?",
+                        new String[]{queryDate[0]+"",queryDate[1]+""});
+                break;
+            case "year":
+                cursor = sqLiteDatabase.rawQuery("select * from item where year=?",
+                        new String[]{queryDate[0]+""});
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + queryType);
         }
+        cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
             int reason = cursor.getInt(cursor.getColumnIndexOrThrow("reason"));
             double account = cursor.getDouble(cursor.getColumnIndexOrThrow("account"));
@@ -178,14 +252,14 @@ public class DataUtils {
             String createTime = cursor.getString(cursor.getColumnIndexOrThrow("createTime"));
             try {
                 AccountItem accountItem = new AccountItem(reason,account,new CalendarUtils().StringToCalender(date),createTime);
-                DayList.add(accountItem);
+                updateData(listTreeMap,accountItem);
             } catch (ParseException e) {
                 e.printStackTrace();
             }
             cursor.moveToNext();
         }
         cursor.close();
-        return !(DayList.isEmpty());
+        return !(listTreeMap.isEmpty());
     }
 
 
