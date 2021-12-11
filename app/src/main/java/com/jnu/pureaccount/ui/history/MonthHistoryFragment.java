@@ -1,6 +1,7 @@
 package com.jnu.pureaccount.ui.history;
 
 import static com.jnu.pureaccount.event.AddItemActivity.OPERATION_EDIT;
+import static com.jnu.pureaccount.utils.CalendarUtils.getDaysByYearMonth;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
@@ -26,12 +27,20 @@ import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.jnu.pureaccount.R;
 import com.jnu.pureaccount.adapter.HomeItemAdapter;
 import com.jnu.pureaccount.data.AccountItem;
 import com.jnu.pureaccount.data.DayTotalItem;
 import com.jnu.pureaccount.data.HomeItem;
+import com.jnu.pureaccount.data.ShowMonthData;
 import com.jnu.pureaccount.event.AddItemActivity;
 import com.jnu.pureaccount.event.ShowItemActivity;
 import com.jnu.pureaccount.utils.CalendarUtils;
@@ -49,6 +58,7 @@ public class MonthHistoryFragment extends Fragment {
     private String selectMonth;
     private TextView tvNoRecord;
     private RecyclerView recyclerView;
+    private LineChart lineChart;
     MonthAdapter mAdapter;
     ArrayList<HomeItem> mMonthList;
     TreeMap<String,List<HomeItem>> listTreeMap;
@@ -67,6 +77,7 @@ public class MonthHistoryFragment extends Fragment {
         if(!MonthListExist) tvNoRecord.setVisibility(View.GONE);
         mAdapter.notifyDataSetChanged();
         //数据一多必出问题……但是position也很难用时间复杂度更好的方法获得，先将就一下吧
+        updateLineChart();
     }
 
     public MonthHistoryFragment() {
@@ -96,8 +107,56 @@ public class MonthHistoryFragment extends Fragment {
         listTreeMap = new TreeMap<>();
         initRecyclerView(rootView);
         initFloatingActionButton(rootView);
+        initLineChart(rootView);
         tvNoRecord = rootView.findViewById(R.id.no_record);
         return rootView;
+    }
+
+    private void updateLineChart(){
+        List<ShowMonthData> ShowMonthDataList  = new ArrayList<>();
+        int[] tmp = new int[5];
+        new CalendarUtils().TimeStringToInt(selectMonth,tmp);
+        for(int i = 1;i <= getDaysByYearMonth(tmp[0],tmp[1]);i++){
+            ShowMonthDataList.add(new ShowMonthData(getContext(),tmp[0],tmp[1],i));
+        }
+        List<Entry> entries = new ArrayList<>();
+        for(int i = 0;i <ShowMonthDataList.size();i++){
+            entries.add(new BarEntry(ShowMonthDataList.get(i).getDay(),
+                    (float)ShowMonthDataList.get(i).getExpend()));
+        }
+        LineDataSet lineDataSet = new LineDataSet(entries,"日支出");
+        lineDataSet.setColor(getResources().getColor(R.color.button_yellow));
+
+        LineData lineData = new LineData(lineDataSet);
+        lineChart.setData(lineData);
+        lineChart.invalidate();
+    }
+
+    private void initLineChart(View view){
+        lineChart = view.findViewById(R.id.line_chart);
+
+        List<ShowMonthData> ShowMonthDataList  = new ArrayList<>();
+        int[] tmp = new int[5];
+        new CalendarUtils().TimeStringToInt(selectMonth,tmp);
+        for(int i = 1;i <= getDaysByYearMonth(tmp[0],tmp[1]);i++){
+            ShowMonthDataList.add(new ShowMonthData(getContext(),tmp[0],tmp[1],i));
+        }
+        List<Entry> entries = new ArrayList<>();
+        for(int i = 0;i <ShowMonthDataList.size();i++){
+            entries.add(new BarEntry(ShowMonthDataList.get(i).getDay(),
+                    (float)ShowMonthDataList.get(i).getExpend()));
+        }
+        LineDataSet lineDataSet = new LineDataSet(entries,"每日支出");
+        lineDataSet.setColor(getResources().getColor(R.color.button_yellow));
+
+        LineData lineData = new LineData(lineDataSet);
+
+        lineChart.setTouchEnabled(false);
+        lineChart.getDescription().setEnabled(false);
+        lineChart.getXAxis().setDrawGridLines(false);
+
+        lineChart.setData(lineData);
+        lineChart.invalidate();
     }
 
     private void initRecyclerView(View view){
