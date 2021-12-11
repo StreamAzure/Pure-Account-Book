@@ -108,14 +108,17 @@ public class YearHistoryFragment extends Fragment {
             entries.add(new BarEntry(showYearDataList.get(i).getMonth(),
                     (float)showYearDataList.get(i).getExpend()));
         }
-        BarDataSet dataSet = new BarDataSet(entries,"每月支出总览");
-        dataSet.setBarBorderColor(getResources().getColor(R.color.button_yellow));
+        BarDataSet dataSet = new BarDataSet(entries,"月支出");
+        dataSet.setColor(getResources().getColor(R.color.button_yellow));
 
         BarData barData = new BarData(dataSet);
+        barChart.setData(barData);
         barChart.invalidate();
     }
 
     private void initBarChart(View view){
+        barChart = view.findViewById(R.id.bar_chart);
+
         List<ShowYearData> showYearDataList  = new ArrayList<>();
         int[] tmp = new int[5];
         new CalendarUtils().TimeStringToInt(selectYear,tmp);
@@ -123,7 +126,6 @@ public class YearHistoryFragment extends Fragment {
         for(int i = 1;i <= 12;i++){
             showYearDataList.add(new ShowYearData(getContext(),year,i));
         }
-        barChart = view.findViewById(R.id.bar_chart);
         List<BarEntry> entries = new ArrayList<>();
         for(int i = 0;i <showYearDataList.size();i++){
             entries.add(new BarEntry(showYearDataList.get(i).getMonth(),
