@@ -15,10 +15,17 @@ import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.TextView;
 
+import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.Entry;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.jnu.pureaccount.R;
 import com.jnu.pureaccount.adapter.HomeItemAdapter;
 import com.jnu.pureaccount.data.HomeItem;
+import com.jnu.pureaccount.data.ShowYearData;
 import com.jnu.pureaccount.utils.CalendarUtils;
 import com.jnu.pureaccount.utils.DataUtils;
 import com.jnu.pureaccount.utils.MyDatePickerDialog;
@@ -34,6 +41,7 @@ public class YearHistoryFragment extends Fragment {
     private String selectYear;
     private TextView tvNoRecord;
     private RecyclerView recyclerView;
+    private BarChart barChart;
     YearAdapter mAdapter;
     ArrayList<HomeItem> mYearList;
     TreeMap<String, List<HomeItem>> listTreeMap;
@@ -52,6 +60,7 @@ public class YearHistoryFragment extends Fragment {
         if(!YearListExist) tvNoRecord.setVisibility(View.GONE);
         mAdapter.notifyDataSetChanged();
         //数据一多必出问题……但是position也很难用时间复杂度更好的方法获得，先将就一下吧
+        updateBarChart();
     }
 
     public YearHistoryFragment() {
@@ -81,8 +90,56 @@ public class YearHistoryFragment extends Fragment {
         listTreeMap = new TreeMap<>();
         initRecyclerView(rootView);
         initFloatingActionButton(rootView);
+        initBarChart(rootView);
         tvNoRecord = rootView.findViewById(R.id.no_record);
         return rootView;
+    }
+
+    private void updateBarChart(){
+        List<ShowYearData> showYearDataList  = new ArrayList<>();
+        int[] tmp = new int[5];
+        new CalendarUtils().TimeStringToInt(selectYear,tmp);
+        int year = tmp[0];
+        for(int i = 1;i <= 12;i++){
+            showYearDataList.add(new ShowYearData(getContext(),year,i));
+        }
+        List<BarEntry> entries = new ArrayList<>();
+        for(int i = 0;i <showYearDataList.size();i++){
+            entries.add(new BarEntry(showYearDataList.get(i).getMonth(),
+                    (float)showYearDataList.get(i).getExpend()));
+        }
+        BarDataSet dataSet = new BarDataSet(entries,"每月支出总览");
+        dataSet.setBarBorderColor(getResources().getColor(R.color.button_yellow));
+
+        BarData barData = new BarData(dataSet);
+        barChart.invalidate();
+    }
+
+    private void initBarChart(View view){
+        List<ShowYearData> showYearDataList  = new ArrayList<>();
+        int[] tmp = new int[5];
+        new CalendarUtils().TimeStringToInt(selectYear,tmp);
+        int year = tmp[0];
+        for(int i = 1;i <= 12;i++){
+            showYearDataList.add(new ShowYearData(getContext(),year,i));
+        }
+        barChart = view.findViewById(R.id.bar_chart);
+        List<BarEntry> entries = new ArrayList<>();
+        for(int i = 0;i <showYearDataList.size();i++){
+            entries.add(new BarEntry(showYearDataList.get(i).getMonth(),
+                    (float)showYearDataList.get(i).getExpend()));
+        }
+        BarDataSet dataSet = new BarDataSet(entries,"月支出");
+        dataSet.setColor(getResources().getColor(R.color.button_yellow));
+
+        BarData barData = new BarData(dataSet);
+        barChart.setData(barData);
+        barChart.setDrawGridBackground(false);
+        barChart.setTouchEnabled(false);
+        barChart.getDescription().setEnabled(false);
+        barChart.getXAxis().setDrawGridLines(false);
+
+        barChart.invalidate();
     }
 
     private void initRecyclerView(View view){

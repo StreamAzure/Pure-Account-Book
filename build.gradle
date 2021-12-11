@@ -3,6 +3,7 @@ buildscript {
     repositories {
         google()
         mavenCentral()
+        //不是放在这里哦，凡在settings.gradle里
     }
     dependencies {
         classpath "com.android.tools.build:gradle:7.0.3"
