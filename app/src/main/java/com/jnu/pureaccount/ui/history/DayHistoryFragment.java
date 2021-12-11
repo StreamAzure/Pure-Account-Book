@@ -42,13 +42,17 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.TreeMap;
 
 public class DayHistoryFragment extends Fragment {
     private FloatingActionButton floatingActionButton;
     private String selectDay;
     private RecyclerView recyclerView;
+    private TextView tvNoRecord;
     HomeItemAdapter mAdapter;
     ArrayList<HomeItem> mDayList;
+    TreeMap<String,List<HomeItem>> listTreeMap;
+
 
     @Override
     public void onResume(){
@@ -61,8 +65,8 @@ public class DayHistoryFragment extends Fragment {
         int[] intDate = new int[5];
         new CalendarUtils().TimeStringToInt(selectDay,intDate);
         try {
-            boolean DayListExist = new DataUtils(getContext()).QueryDayHistory(mDayList, intDate[0],intDate[1],intDate[2]);
-            if(!DayListExist) recyclerView.setVisibility(View.GONE);
+            boolean DayListExist = new DataUtils(getContext()).QueryDayHistory(mDayList, listTreeMap, intDate[0],intDate[1],intDate[2]);
+            if(DayListExist) tvNoRecord.setVisibility(View.GONE);
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -98,6 +102,8 @@ public class DayHistoryFragment extends Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_day_history, container, false);
         mDayList = new ArrayList<>();
+        listTreeMap = new TreeMap<>();
+        tvNoRecord = rootView.findViewById(R.id.no_record);
         initRecyclerView(rootView);
         initFloatingActionButton(rootView);
         return rootView;

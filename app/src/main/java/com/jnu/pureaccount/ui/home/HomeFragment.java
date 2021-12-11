@@ -157,14 +157,10 @@ public class HomeFragment extends Fragment{
             Map.Entry<String,List<HomeItem>> entry = it.next();
             List<HomeItem> homeItems = entry.getValue();//获取该日对应的homeItem列表
             Calendar calendar = ((AccountItem)homeItems.get(0)).getDate();//从列表中的一项获得该日日期
-            DayTotalItem dayTotalItem = new DayTotalItem(calendar,0,0);
+            DayTotalItem dayTotalItem = new DayTotalItem(calendar, dataUtils.getDayIncome(calendar),
+                    dataUtils.getDayExpend(calendar));
             mHomeItemList.add(dayTotalItem);//加入当前遍历到的日期Item
             mHomeItemList.addAll(homeItems);
-            if(mHomeItemList.get(mHomeItemList.size()- homeItems.size()-1) instanceof DayTotalItem){
-                dayTotalItem = (DayTotalItem) mHomeItemList.get(mHomeItemList.size()-homeItems.size()-1);
-                dayTotalItem.setExpendSubTotal(dataUtils.getDayExpend(dayTotalItem.getDate()));
-                dayTotalItem.setIncomeSubTotal(dataUtils.getDayIncome(dayTotalItem.getDate()));
-            }
         }
         monthTotalItem.setExpend(dataUtils.getMonthExpend(monthTotalItem.getYear(),monthTotalItem.getMonth()));
         monthTotalItem.setIncome(dataUtils.getMonthIncome(monthTotalItem.getYear(),monthTotalItem.getMonth()));
