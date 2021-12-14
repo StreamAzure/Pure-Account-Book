@@ -56,8 +56,9 @@ public class YearHistoryFragment extends Fragment {
         mYearList.clear();
         int[] intDate = new int[5];
         new CalendarUtils().TimeStringToInt(selectYear,intDate);
-        boolean YearListExist = new DataUtils(getContext()).QueryMonthHistory(mYearList, listTreeMap, intDate[0],intDate[1]);
-        if(!YearListExist) tvNoRecord.setVisibility(View.GONE);
+        boolean YearListExist = new DataUtils(getContext()).QueryYearHistory(mYearList, listTreeMap, intDate[0]);
+        if(YearListExist) tvNoRecord.setVisibility(View.GONE);
+        else tvNoRecord.setVisibility(View.VISIBLE);
         mAdapter.notifyDataSetChanged();
         //数据一多必出问题……但是position也很难用时间复杂度更好的方法获得，先将就一下吧
         updateBarChart();

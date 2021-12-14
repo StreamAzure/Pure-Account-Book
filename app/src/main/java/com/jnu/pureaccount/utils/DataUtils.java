@@ -178,7 +178,7 @@ public class DataUtils {
             List<HomeItem> homeItems = entry.getValue();//获取该日对应的homeItem列表
             dayList.addAll(homeItems);
         }
-        return true;
+        return !dayList.isEmpty();
     }
 
     /**
@@ -199,7 +199,7 @@ public class DataUtils {
             monthList.add(dayTotalItem);//加入当前遍历到的日期Item
             monthList.addAll(homeItems);
         }
-        return true;
+        return !monthList.isEmpty();
     }
 
     public boolean QueryYearHistory(ArrayList<HomeItem> yearList, TreeMap<String,List<HomeItem>> listTreeMap,int year){
@@ -215,7 +215,7 @@ public class DataUtils {
             yearList.add(dayTotalItem);//加入当前遍历到的日期Item
             yearList.addAll(homeItems);
         }
-        return true;
+        return !yearList.isEmpty();
     }
 
     /**

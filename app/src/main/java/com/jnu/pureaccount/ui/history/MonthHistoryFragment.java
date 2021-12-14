@@ -74,7 +74,8 @@ public class MonthHistoryFragment extends Fragment {
         int[] intDate = new int[5];
         new CalendarUtils().TimeStringToInt(selectMonth,intDate);
         boolean MonthListExist = new DataUtils(getContext()).QueryMonthHistory(mMonthList, listTreeMap, intDate[0],intDate[1]);
-        if(!MonthListExist) tvNoRecord.setVisibility(View.GONE);
+        if(MonthListExist) tvNoRecord.setVisibility(View.GONE);
+        else tvNoRecord.setVisibility(View.VISIBLE);
         mAdapter.notifyDataSetChanged();
         //数据一多必出问题……但是position也很难用时间复杂度更好的方法获得，先将就一下吧
         updateLineChart();

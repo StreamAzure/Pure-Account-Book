@@ -67,6 +67,7 @@ public class DayHistoryFragment extends Fragment {
         try {
             boolean DayListExist = new DataUtils(getContext()).QueryDayHistory(mDayList, listTreeMap, intDate[0],intDate[1],intDate[2]);
             if(DayListExist) tvNoRecord.setVisibility(View.GONE);
+            else tvNoRecord.setVisibility(View.VISIBLE);
         } catch (ParseException e) {
             e.printStackTrace();
         }
