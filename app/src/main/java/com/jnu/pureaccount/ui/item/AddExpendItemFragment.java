@@ -78,6 +78,11 @@ public class AddExpendItemFragment extends Fragment implements View.OnClickListe
         keyBoardUtils.showKeyboard();
         initSelectDate();//初始化选择时间为今天的日期
 
+        //初始化选择，默认选第一个
+        linearLayout.setBackgroundColor(getResources().getColor(R.color.food));
+        addItemReason.setText(getResources().getString(R.string.food));
+        selectItem = ITEM_FOOD;
+
         if(operationTAG == OPERATION_EDIT){
             //如果是修改，说明之前有数据，相关控件的值初始时都要保持原状
             selectDate = previousSelectTime;
@@ -173,6 +178,7 @@ public class AddExpendItemFragment extends Fragment implements View.OnClickListe
     public void onClick (View v){
         switch (v.getId()) {
             case R.id.btn_add_expend_item_food:
+                linearLayout.setBackground(getResources().getDrawable(R.drawable.round_corners_10dp_background));
                 linearLayout.setBackgroundColor(getResources().getColor(R.color.food));
                 addItemReason.setText(getResources().getString(R.string.food));
                 selectItem = ITEM_FOOD;

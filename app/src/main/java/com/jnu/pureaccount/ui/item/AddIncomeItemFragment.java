@@ -74,6 +74,11 @@ public class AddIncomeItemFragment extends Fragment implements View.OnClickListe
         keyBoardUtils.showKeyboard();
         initSelectDate();
 
+        //初始化选择，默认选第一个
+        linearLayout.setBackgroundColor(getResources().getColor(R.color.salary));
+        addItemReason.setText(getResources().getString(R.string.salary));
+        selectItem = ITEM_SALARY;
+
         if(operationTAG == OPERATION_EDIT){
             //如果是修改，说明之前有数据，相关控件的值初始时都要保持原状
             selectDate = previousSelectTime;
