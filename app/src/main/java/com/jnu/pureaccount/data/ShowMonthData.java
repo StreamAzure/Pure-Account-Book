@@ -14,6 +14,7 @@ public class ShowMonthData {
     private int month;
     private int day;
     private double expend;
+    private double income;
 
     public ShowMonthData(Context context, int year, int month, int day){
         DataUtils dataUtils = new DataUtils(context);
@@ -22,6 +23,7 @@ public class ShowMonthData {
         this.month = month;
         this.day = day;
         this.expend = dataUtils.getDayExpend(year,month,day);
+        this.income = dataUtils.getDayIncome(year,month,day);
         Log.e("ShowMonthData",this.expend+"");
     }
 
@@ -39,5 +41,9 @@ public class ShowMonthData {
 
     public int getYear() {
         return year;
+    }
+
+    public double getIncome() {
+        return income;
     }
 }

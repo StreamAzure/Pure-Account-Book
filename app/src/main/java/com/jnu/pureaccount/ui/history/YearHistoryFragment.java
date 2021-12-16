@@ -2,6 +2,7 @@ package com.jnu.pureaccount.ui.history;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -23,6 +24,7 @@ import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.jnu.pureaccount.R;
 import com.jnu.pureaccount.adapter.HomeItemAdapter;
@@ -106,16 +108,32 @@ public class YearHistoryFragment extends Fragment {
         for(int i = 1;i <= 12;i++){
             showYearDataList.add(new ShowYearData(getContext(),year,i));
         }
-        List<BarEntry> entries = new ArrayList<>();
+        //-------支出数据集-------
+        List<BarEntry> expendEntries = new ArrayList<>();
         for(int i = 0;i <showYearDataList.size();i++){
-            entries.add(new BarEntry(showYearDataList.get(i).getMonth(),
+            expendEntries.add(new BarEntry(showYearDataList.get(i).getMonth(),
                     (float)showYearDataList.get(i).getExpend()));
         }
-        BarDataSet dataSet = new BarDataSet(entries,"月支出");
-        dataSet.setColor(getResources().getColor(R.color.button_yellow));
+        BarDataSet expendDataSet = new BarDataSet(expendEntries,"月支出");
+        expendDataSet.setColor(Color.rgb(129, 216, 200));
 
-        BarData barData = new BarData(dataSet);
+        //-------收入数据集-------
+        List<BarEntry> incomeEntries = new ArrayList<>();
+        for(int i=0;i<showYearDataList.size();i++){
+            incomeEntries.add(new BarEntry(showYearDataList.get(i).getMonth(),
+                    (float)showYearDataList.get(i).getIncome()));
+        }
+        BarDataSet incomeDataSet = new BarDataSet(incomeEntries,"月收入");
+        incomeDataSet.setColor( Color.rgb(241, 214, 145));
+
+        ArrayList<IBarDataSet> barDataSets = new ArrayList<>();
+        barDataSets.add(expendDataSet);
+        barDataSets.add(incomeDataSet);
+
+        BarData barData = new BarData(barDataSets);
         barChart.setData(barData);
+        barChart.getBarData().setBarWidth(0.45f);
+        barChart.groupBars(0, 0.04f/*组与组之间的距离*/, 0.03f/*组中每个柱子之间的距离*/);
         barChart.invalidate();
     }
 
@@ -129,21 +147,37 @@ public class YearHistoryFragment extends Fragment {
         for(int i = 1;i <= 12;i++){
             showYearDataList.add(new ShowYearData(getContext(),year,i));
         }
-        List<BarEntry> entries = new ArrayList<>();
+        //-------支出数据集-------
+        List<BarEntry> expendEntries = new ArrayList<>();
         for(int i = 0;i <showYearDataList.size();i++){
-            entries.add(new BarEntry(showYearDataList.get(i).getMonth(),
+            expendEntries.add(new BarEntry(showYearDataList.get(i).getMonth(),
                     (float)showYearDataList.get(i).getExpend()));
         }
-        BarDataSet dataSet = new BarDataSet(entries,"月支出");
-        dataSet.setColor(getResources().getColor(R.color.button_yellow));
+        BarDataSet expendDataSet = new BarDataSet(expendEntries,"月支出");
+        expendDataSet.setColor(Color.rgb(129, 216, 200));
 
-        BarData barData = new BarData(dataSet);
+        //-------收入数据集-------
+        List<BarEntry> incomeEntries = new ArrayList<>();
+        for(int i=0;i<showYearDataList.size();i++){
+            incomeEntries.add(new BarEntry(showYearDataList.get(i).getMonth(),
+                    (float)showYearDataList.get(i).getIncome()));
+        }
+        BarDataSet incomeDataSet = new BarDataSet(incomeEntries,"月收入");
+        incomeDataSet.setColor( Color.rgb(241, 214, 145));
+
+        ArrayList<IBarDataSet> barDataSets = new ArrayList<>();
+        barDataSets.add(expendDataSet);
+        barDataSets.add(incomeDataSet);
+
+        BarData barData = new BarData(barDataSets);
         barChart.setData(barData);
         barChart.setTouchEnabled(false);
         barChart.getDescription().setEnabled(false);
         barChart.getXAxis().setDrawGridLines(false);
         barChart.getAxisRight().setEnabled(false);//禁用右侧坐标轴
         barChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
+        barChart.getBarData().setBarWidth(0.45f);
+        barChart.groupBars(0, 0.04f/*组与组之间的距离*/, 0.03f/*组中每个柱子之间的距离*/);
         barChart.getLegend().setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
 
         barChart.invalidate();

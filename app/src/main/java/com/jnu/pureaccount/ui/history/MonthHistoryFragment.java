@@ -8,6 +8,7 @@ import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -36,6 +37,7 @@ import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.jnu.pureaccount.R;
 import com.jnu.pureaccount.adapter.HomeItemAdapter;
@@ -122,15 +124,29 @@ public class MonthHistoryFragment extends Fragment {
         for(int i = 1;i <= getDaysByYearMonth(tmp[0],tmp[1]);i++){
             ShowMonthDataList.add(new ShowMonthData(getContext(),tmp[0],tmp[1],i));
         }
-        List<Entry> entries = new ArrayList<>();
+        //-------支出数据集-------
+        List<Entry> expendEntries = new ArrayList<>();
         for(int i = 0;i <ShowMonthDataList.size();i++){
-            entries.add(new BarEntry(ShowMonthDataList.get(i).getDay(),
+            expendEntries.add(new BarEntry(ShowMonthDataList.get(i).getDay(),
                     (float)ShowMonthDataList.get(i).getExpend()));
         }
-        LineDataSet lineDataSet = new LineDataSet(entries,"日支出");
-        lineDataSet.setColor(getResources().getColor(R.color.button_yellow));
+        LineDataSet expendDataSet = new LineDataSet(expendEntries,"日支出");
+        expendDataSet.setColor(Color.rgb(129, 216, 200));
 
-        LineData lineData = new LineData(lineDataSet);
+        //-------收入数据集-------
+        List<Entry> incomeEntries = new ArrayList<>();
+        for(int i = 0;i<ShowMonthDataList.size();i++){
+            incomeEntries.add(new BarEntry(ShowMonthDataList.get(i).getDay(),
+                    (float)ShowMonthDataList.get(i).getIncome()));
+        }
+        LineDataSet incomeDataSet = new LineDataSet(incomeEntries,"日收入");
+        incomeDataSet.setColor( Color.rgb(241, 214, 145));
+
+        ArrayList<ILineDataSet> lineDataSets = new ArrayList<>();
+        lineDataSets.add(expendDataSet);
+        lineDataSets.add(incomeDataSet);
+
+        LineData lineData = new LineData(lineDataSets);
         lineChart.setData(lineData);
         lineChart.invalidate();
     }
@@ -144,16 +160,29 @@ public class MonthHistoryFragment extends Fragment {
         for(int i = 1;i <= getDaysByYearMonth(tmp[0],tmp[1]);i++){
             ShowMonthDataList.add(new ShowMonthData(getContext(),tmp[0],tmp[1],i));
         }
-        List<Entry> entries = new ArrayList<>();
+        //-------支出数据集-------
+        List<Entry> expendEntries = new ArrayList<>();
         for(int i = 0;i <ShowMonthDataList.size();i++){
-            entries.add(new BarEntry(ShowMonthDataList.get(i).getDay(),
+            expendEntries.add(new BarEntry(ShowMonthDataList.get(i).getDay(),
                     (float)ShowMonthDataList.get(i).getExpend()));
         }
-        LineDataSet lineDataSet = new LineDataSet(entries,"日支出");
-        lineDataSet.setColor(getResources().getColor(R.color.button_yellow));
+        LineDataSet expendDataSet = new LineDataSet(expendEntries,"日支出");
+        expendDataSet.setColor(Color.rgb(129, 216, 200));
 
-        LineData lineData = new LineData(lineDataSet);
+        //-------收入数据集-------
+        List<Entry> incomeEntries = new ArrayList<>();
+        for(int i = 0;i<ShowMonthDataList.size();i++){
+            incomeEntries.add(new BarEntry(ShowMonthDataList.get(i).getDay(),
+                    (float)ShowMonthDataList.get(i).getIncome()));
+        }
+        LineDataSet incomeDataSet = new LineDataSet(incomeEntries,"日收入");
+        incomeDataSet.setColor( Color.rgb(241, 214, 145));
 
+        ArrayList<ILineDataSet> lineDataSets = new ArrayList<>();
+        lineDataSets.add(expendDataSet);
+        lineDataSets.add(incomeDataSet);
+
+        LineData lineData = new LineData(lineDataSets);
         lineChart.setTouchEnabled(false);
         lineChart.getDescription().setEnabled(false);
         lineChart.getXAxis().setDrawGridLines(false);
