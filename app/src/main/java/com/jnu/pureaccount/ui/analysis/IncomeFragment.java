@@ -50,11 +50,7 @@ public class IncomeFragment extends Fragment implements AnalysisFragment.TimeCha
     private int startCode = 11; //收入类型代号的第一个
     private int endCode = 14;//收入类型代号的最后一个
 
-    public static final int[] PIE_COLORS = {
-            Color.rgb(181, 194, 202), Color.rgb(129, 216, 200), Color.rgb(241, 214, 145),
-            Color.rgb(108, 176, 223), Color.rgb(195, 221, 155), Color.rgb(251, 215, 191),
-            Color.rgb(237, 189, 189), Color.rgb(172, 217, 243)
-    };
+    public int[] PIE_COLORS;
 
     //RecyclerView
     private RecyclerView recyclerView;
@@ -70,10 +66,19 @@ public class IncomeFragment extends Fragment implements AnalysisFragment.TimeCha
     }
 
     @Override
+    public void onResume(){
+        super.onResume();
+        ((AnalysisFragment)this.getParentFragment()).registerListener(this);
+        updateData();
+        setPieChartData(pieChart,dataMap2);
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
         }
+        setColors(getContext());
     }
 
     @Override
@@ -91,10 +96,20 @@ public class IncomeFragment extends Fragment implements AnalysisFragment.TimeCha
         return rootView;
     }
 
+    public void setColors(Context context){
+        PIE_COLORS = new int[]{
+                context.getResources().getColor(R.color.salary), getContext().getResources().getColor(R.color.winning),
+                context.getResources().getColor(R.color.investment), getContext().getResources().getColor(R.color.business),
+                //Color.rgb(181, 194, 202), Color.rgb(129, 216, 200), Color.rgb(241, 214, 145),
+                //Color.rgb(108, 176, 223), Color.rgb(195, 221, 155), Color.rgb(251, 215, 191),
+                //Color.rgb(237, 189, 189), Color.rgb(172, 217, 243)
+        };
+    }
+
     //两个监听器，监听选择时间按钮的变化
     @Override
     public void startTimeChange(String startTime) {
-        Log.e("stream","时间变化");
+        Log.e("income","时间变化");
         this.startTime = startTime;
         updateData();
         setPieChartData(pieChart,dataMap2);
@@ -102,7 +117,7 @@ public class IncomeFragment extends Fragment implements AnalysisFragment.TimeCha
 
     @Override
     public void endTimeChange(String endTime) {
-        Log.e("stream","时间变化");
+        Log.e("income","时间变化");
         this.endTime = endTime;
         updateData();
         setPieChartData(pieChart,dataMap2);
@@ -147,7 +162,6 @@ public class IncomeFragment extends Fragment implements AnalysisFragment.TimeCha
         for(int i=startCode;i<=endCode;i++){
             if(dataMap.get(i)==null) dataMap2.put(getNameByCode(i),0.00);
             else dataMap2.put(getNameByCode(i),(double)dataMap.get(i));
-            Log.e("An",getNameByCode(i)+" "+dataMap2.get(getNameByCode(i))+"");
         }
         updateBarChart();
     }
@@ -246,5 +260,11 @@ public class IncomeFragment extends Fragment implements AnalysisFragment.TimeCha
         pieChart.highlightValues(null);
         pieChart.animateY(1400, Easing.EaseInOutQuart);
         pieChart.invalidate();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        Log.e("IncomeFragment","释放");
     }
 }

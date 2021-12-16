@@ -115,6 +115,8 @@ public class AnalysisFragment extends Fragment {
             }
         });
 
+        //mViewPager.setOffscreenPageLimit(mFragments.size());
+
         TabLayoutMediator tabLayoutMediator = new TabLayoutMediator(mTabLayout, mViewPager, new TabLayoutMediator.TabConfigurationStrategy() {
             @Override
             public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
