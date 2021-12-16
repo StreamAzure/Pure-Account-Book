@@ -33,27 +33,31 @@
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="#C5C5C5"
         android:layout_marginVertical="3dp"/>
 
-    <com.github.mikephil.charting.charts.PieChart
-        android:id="@+id/pie_chart"
-        android:layout_width="match_parent"
-        android:layout_height="320dp" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/percent_bar_container"
-        android:layout_width="match_parent"
+    <com.google.android.material.tabs.TabLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:id="@+id/tab_layout"
+        android:background="@color/background"
+        android:layout_gravity="center_horizontal"
+        app:tabMaxWidth="270dp"
+        app:tabMinWidth="90dp"
+        app:tabPaddingEnd="10dp"
+        app:tabPaddingStart="10dp"
+        app:tabSelectedTextColor="@color/black"
+        app:tabIndicatorColor="@color/button_yellow"
+        app:tabIndicatorFullWidth="false"/>
 
-    </androidx.recyclerview.widget.RecyclerView>
-
-
-
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/vp_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
 
 </androidx.appcompat.widget.LinearLayoutCompat>
