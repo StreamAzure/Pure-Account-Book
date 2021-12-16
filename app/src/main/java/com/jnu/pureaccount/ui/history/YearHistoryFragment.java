@@ -16,6 +16,8 @@ import android.widget.DatePicker;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
@@ -137,10 +139,12 @@ public class YearHistoryFragment extends Fragment {
 
         BarData barData = new BarData(dataSet);
         barChart.setData(barData);
-        barChart.setDrawGridBackground(false);
         barChart.setTouchEnabled(false);
         barChart.getDescription().setEnabled(false);
         barChart.getXAxis().setDrawGridLines(false);
+        barChart.getAxisRight().setEnabled(false);//禁用右侧坐标轴
+        barChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
+        barChart.getLegend().setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
 
         barChart.invalidate();
     }

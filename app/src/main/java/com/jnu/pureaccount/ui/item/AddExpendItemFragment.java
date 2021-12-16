@@ -28,9 +28,10 @@ import com.jnu.pureaccount.utils.DataUtils;
 import com.jnu.pureaccount.utils.KeyBoardUtils;
 import com.jnu.pureaccount.utils.LogUtils;
 
+import java.util.HashMap;
+
 
 public class AddExpendItemFragment extends Fragment implements View.OnClickListener {
-
     public int selectItem = 0;
     public double account;
     public String selectDate;
@@ -44,6 +45,8 @@ public class AddExpendItemFragment extends Fragment implements View.OnClickListe
     //金额编辑框
     private KeyboardView keyboardView;
     //自定义软键盘
+
+    public static final HashMap<Integer, Integer> mapNameWithBackground = new HashMap<>(); //TODO:做一个buttonID到背景图的映射表
 
     int[] nowDate = new CalendarUtils().getNowDate();
     int[] IntSelectDate = new int[5];

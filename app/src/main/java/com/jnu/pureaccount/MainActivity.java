@@ -20,7 +20,9 @@ import com.jnu.pureaccount.event.AddItemActivity;
 import com.jnu.pureaccount.ui.analysis.AnalysisFragment;
 import com.jnu.pureaccount.ui.history.HistoryFragment;
 import com.jnu.pureaccount.ui.home.HomeFragment;
+import com.jnu.pureaccount.ui.person.PersonFragment;
 import com.jnu.pureaccount.utils.AndroidBarUtils;
+import com.jnu.pureaccount.utils.DataUtils;
 
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
@@ -45,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
     private HomeFragment homeFragment;
     private HistoryFragment historyFragment;
     private AnalysisFragment analysisFragment;
+    private PersonFragment personFragment;
     private Toolbar toolbar;
 
     @Override
@@ -108,6 +111,13 @@ public class MainActivity extends AppCompatActivity {
                     }
                     toolbar.setTitle("分析统计");
                     initFragment(analysisFragment);
+                }
+                else if(item.getItemId() == R.id.nav_person){
+                    if(personFragment == null){
+                        personFragment = new PersonFragment();
+                    }
+                    toolbar.setTitle("个人中心");
+                    initFragment(personFragment);
                 }
                 //向左收回抽屉
                 drawerLayout.closeDrawer(Gravity.LEFT);

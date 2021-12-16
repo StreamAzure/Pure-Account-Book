@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_marginTop="8dp">
+
+    <ImageView
+        android:id="@+id/icon"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@drawable/icon_food"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="10dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+    <TextView
+        android:id="@+id/reason_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="购物消费"
+        android:layout_marginTop="5dp"
+        android:textColor="@color/black"
+        android:textSize="15sp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/icon"
+        android:layout_marginHorizontal="13dp"/>
+    <TextView
+        android:id="@+id/total_account"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="343.00"
+        android:textSize="15sp"
+        android:textColor="@color/black"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/percent_bar"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginRight="20dp"/>
+
+
+    <ProgressBar
+        android:id="@+id/percent_bar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="0dp"
+        android:layout_height="5dp"
+        android:max="100"
+        android:progress="80"
+        android:progressDrawable="@drawable/progressbar"
+        android:visibility="visible"
+        android:layout_marginBottom="5dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@+id/icon"
+        app:layout_constraintTop_toBottomOf="@id/reason_name"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginStart="13dp"
+        android:layout_marginEnd="20dp"/>
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="#C5C5C5"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="10dp"
+        app:layout_constraintLeft_toRightOf="@id/icon"
+        app:layout_constraintTop_toBottomOf="@id/percent_bar"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -5,7 +5,10 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Build;
 import android.util.Log;
+
+import androidx.annotation.RequiresApi;
 
 import com.jnu.pureaccount.data.AccountItem;
 import com.jnu.pureaccount.data.DayTotalItem;
@@ -15,6 +18,7 @@ import com.jnu.pureaccount.db.DatabaseHelper;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -157,6 +161,37 @@ public class DataUtils {
             result.moveToNext();
         }
         result.close();
+    }
+
+    /**
+     * @description 返回给定时间段内各类别的金额统计
+     * @param startTime 起始时间，格式“yyyy-MM-dd”
+     * @param endTime 结束时间，格式”yyyy-MM-dd“
+     * @return Map，key为类别代号，value为对应金额
+     */
+    public HashMap<Integer,Double> QueryReasonAccount(String startTime, String endTime){
+        SQLiteOpenHelper sqLiteOpenHelper = new DatabaseHelper(context,dbName,null,dbVersion);
+        SQLiteDatabase sqLiteDatabase = sqLiteOpenHelper.getReadableDatabase();
+        Cursor cursor = sqLiteDatabase.rawQuery("select * from item where date <= ? and date >= ?",
+                new String[]{endTime,startTime});
+        cursor.moveToFirst();
+
+        HashMap<Integer,Double> dataReasonAccountCount = new HashMap<>();
+        while(!cursor.isAfterLast()){
+            int tmpKey = cursor.getInt(1);
+            double tmpValue = cursor.getDouble(2);
+            if(!dataReasonAccountCount.containsKey(tmpKey)){
+                dataReasonAccountCount.put(tmpKey,tmpValue);
+            }
+            else {
+                double v = dataReasonAccountCount.get(tmpKey);
+                v += tmpValue;
+                dataReasonAccountCount.put(tmpKey,v);
+            }
+            cursor.moveToNext();
+        }
+        cursor.close();
+        return dataReasonAccountCount;
     }
 
     /**

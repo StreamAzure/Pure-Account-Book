@@ -28,6 +28,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
@@ -147,7 +149,7 @@ public class MonthHistoryFragment extends Fragment {
             entries.add(new BarEntry(ShowMonthDataList.get(i).getDay(),
                     (float)ShowMonthDataList.get(i).getExpend()));
         }
-        LineDataSet lineDataSet = new LineDataSet(entries,"每日支出");
+        LineDataSet lineDataSet = new LineDataSet(entries,"日支出");
         lineDataSet.setColor(getResources().getColor(R.color.button_yellow));
 
         LineData lineData = new LineData(lineDataSet);
@@ -155,6 +157,9 @@ public class MonthHistoryFragment extends Fragment {
         lineChart.setTouchEnabled(false);
         lineChart.getDescription().setEnabled(false);
         lineChart.getXAxis().setDrawGridLines(false);
+        lineChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
+        lineChart.getAxisRight().setEnabled(false);
+        lineChart.getLegend().setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
 
         lineChart.setData(lineData);
         lineChart.invalidate();

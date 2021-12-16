@@ -1,0 +1,23 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item android:id="@+id/background">
+        <shape>
+            <corners android:radius="5dip" />
+            <gradient android:startColor="#e9e9e9"
+                android:endColor= "#e9e9e9"/>
+        </shape>
+    </item>
+
+    <item android:id="@+id/percent">
+        <clip>
+            <shape>
+                <corners android:radius="5dip" />
+                <gradient
+                    android:angle="0"
+                    android:startColor="@color/button_yellow"
+                    android:endColor="@color/button_yellow"/>
+            </shape>
+        </clip>
+    </item>
+
+</layer-list>
