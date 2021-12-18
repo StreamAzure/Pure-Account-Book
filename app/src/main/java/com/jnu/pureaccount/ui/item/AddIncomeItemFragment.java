@@ -78,6 +78,7 @@ public class AddIncomeItemFragment extends Fragment implements View.OnClickListe
         initView(rootView);
         KeyBoardUtils keyBoardUtils = new KeyBoardUtils(keyboardView,accountEdit);
         keyBoardUtils.showKeyboard();
+
         initSelectDate();
 
         //初始化选择，默认选第一个

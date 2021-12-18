@@ -52,6 +52,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
+        android:layout_marginBottom="1dp"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintBottom_toTopOf="@id/keyBoard">
@@ -86,6 +87,7 @@
         android:id="@+id/keyBoard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/white"
         android:keyBackground="@color/white"
         android:keyTextColor="@color/black"
         android:focusable="true"
