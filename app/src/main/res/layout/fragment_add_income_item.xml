@@ -61,7 +61,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/btn_time"
             android:paddingHorizontal="12dp"
-            android:drawableStart="@drawable/bitmap_drawable"
+            android:drawableStart="@drawable/edit_time_select_resize"
             android:drawablePadding="8dp"
             android:background="@drawable/btn_background"
             android:text="2021=1=1"
