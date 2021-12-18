@@ -18,8 +18,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         //SQLite 没有一个单独的用于存储日期和/或时间的存储类，但 SQLite 能够把日期和时间存储为 TEXT值
-        String sql1 = "create table item(createTime text, reason int, account double, type int, date text,  year int, month int, day int)";
-        //item表：创建日期，类型代号，金额，类型，账目日期，账目年，账目月，账目日
+        String sql1 = "create table item(createTime text, reason int, account double, type int, date text,  year int, month int, day int, remarks text)";
+        //item表：创建日期，类型代号，金额，类型，账目日期，账目年，账目月，账目日，备注
         String sql2 = "create table daysum(year int, month int, day int, income double, expend double)";
         //单日收支记录表daysum：账目日期，收入，支出
         //千万不要动这个顺序！！查询的时候按列查询的！！

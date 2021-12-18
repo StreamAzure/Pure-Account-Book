@@ -6,6 +6,7 @@
         <entry key="..\:/Course_MobileDevelopment/PureAccount/app/src/main/res/drawable-v24/__.xml" value="0.16041666666666668" />
         <entry key="..\:/Course_MobileDevelopment/PureAccount/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.15092592592592594" />
         <entry key="..\:/Course_MobileDevelopment/PureAccount/app/src/main/res/drawable-v24/ic_navigation.xml" value="0.3145833333333333" />
+        <entry key="..\:/Course_MobileDevelopment/PureAccount/app/src/main/res/drawable/bitmap_drawable.xml" value="0.24427083333333333" />
         <entry key="..\:/Course_MobileDevelopment/PureAccount/app/src/main/res/drawable/btn_backgroud.xml" value="0.1675925925925926" />
         <entry key="..\:/Course_MobileDevelopment/PureAccount/app/src/main/res/drawable/ic_launcher_background.xml" value="0.15092592592592594" />
         <entry key="..\:/Course_MobileDevelopment/PureAccount/app/src/main/res/drawable/ic_menu_camera.xml" value="0.1453125" />
@@ -27,8 +28,8 @@
         <entry key="..\:/Course_MobileDevelopment/PureAccount/app/src/main/res/layout/dialog_date_picker.xml" value="0.39947916666666666" />
         <entry key="..\:/Course_MobileDevelopment/PureAccount/app/src/main/res/layout/dialog_time.xml" value="0.264945652173913" />
         <entry key="..\:/Course_MobileDevelopment/PureAccount/app/src/main/res/layout/drawer_item_layout.xml" value="0.1539855072463768" />
-        <entry key="..\:/Course_MobileDevelopment/PureAccount/app/src/main/res/layout/fragment_add_expend_item.xml" value="0.22382671480144403" />
-        <entry key="..\:/Course_MobileDevelopment/PureAccount/app/src/main/res/layout/fragment_add_income_item.xml" value="0.6" />
+        <entry key="..\:/Course_MobileDevelopment/PureAccount/app/src/main/res/layout/fragment_add_expend_item.xml" value="0.264" />
+        <entry key="..\:/Course_MobileDevelopment/PureAccount/app/src/main/res/layout/fragment_add_income_item.xml" value="0.22" />
         <entry key="..\:/Course_MobileDevelopment/PureAccount/app/src/main/res/layout/fragment_add_item.xml" value="0.3015625" />
         <entry key="..\:/Course_MobileDevelopment/PureAccount/app/src/main/res/layout/fragment_analysis.xml" value="0.10185185185185185" />
         <entry key="..\:/Course_MobileDevelopment/PureAccount/app/src/main/res/layout/fragment_classify.xml" value="0.4036458333333333" />
@@ -39,6 +40,7 @@
         <entry key="..\:/Course_MobileDevelopment/PureAccount/app/src/main/res/layout/fragment_income.xml" value="0.15760869565217392" />
         <entry key="..\:/Course_MobileDevelopment/PureAccount/app/src/main/res/layout/fragment_month_history.xml" value="0.2" />
         <entry key="..\:/Course_MobileDevelopment/PureAccount/app/src/main/res/layout/fragment_person.xml" value="0.4036458333333333" />
+        <entry key="..\:/Course_MobileDevelopment/PureAccount/app/src/main/res/layout/fragment_remark_input.xml" value="0.13802083333333334" />
         <entry key="..\:/Course_MobileDevelopment/PureAccount/app/src/main/res/layout/fragment_year_history.xml" value="0.1484375" />
         <entry key="..\:/Course_MobileDevelopment/PureAccount/app/src/main/res/layout/item_account_layout.xml" value="0.264" />
         <entry key="..\:/Course_MobileDevelopment/PureAccount/app/src/main/res/layout/item_daytotal_layout.xml" value="0.4" />

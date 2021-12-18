@@ -13,6 +13,7 @@ public class AccountItem extends HomeItem {
     private int type; //0支出 1收入
     private Calendar date;
     private String createTime;//条目创建时间，24小时制，格式yyyy-MM-dd HH:mm:ss
+    private String remarks;
 
     public AccountItem(int reason, double account, int year,int month,int date) {
         this.icon = getIcon(reason);
@@ -158,5 +159,13 @@ public class AccountItem extends HomeItem {
 
     public String getCreateTime() {
         return createTime;
+    }
+
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
     }
 }

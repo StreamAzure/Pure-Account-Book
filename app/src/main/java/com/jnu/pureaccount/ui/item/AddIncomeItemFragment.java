@@ -2,15 +2,20 @@ package com.jnu.pureaccount.ui.item;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.inputmethodservice.KeyboardView;
 import android.os.Bundle;
 import static com.jnu.pureaccount.event.AddItemActivity.*;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -32,8 +37,9 @@ public class AddIncomeItemFragment extends Fragment implements View.OnClickListe
     public String selectDate;
     private LinearLayout linearLayout;
     private ImageButton btnSalary, btnWinning, btnInvestment, btnBusiness;
-    private Button btnTime, btnRemark;
-    //时间选择按钮；备注按钮，点击后再弹出编辑框
+    private Button btnTime;
+    private EditText etRemarks;
+    //备注编辑框
     private TextView addItemReason;
     //账目类型名称显示
     private EditText accountEdit;
@@ -110,16 +116,6 @@ public class AddIncomeItemFragment extends Fragment implements View.OnClickListe
             }
         });
 
-        //TODO：备注功能：点击后呼出一个上半部分透明的fragment，一个编辑框
-        //输入完改变按钮文字，注意长度限制
-        //至于内容放哪以后再说T_T
-        btnRemark.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-
         //选择时间的按钮
         btnTime.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -137,6 +133,35 @@ public class AddIncomeItemFragment extends Fragment implements View.OnClickListe
             }
         });
 
+
+        //点击编辑框时隐藏自定义软键盘
+        etRemarks.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN){
+                    //etRemarks.requestFocus();
+                    keyBoardUtils.hideKeyboard();
+                    return false;
+                }
+                return false;
+            }
+        });
+
+        //点击完成后编辑框失去焦点并收回键盘
+        etRemarks.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event){
+                if(actionId == EditorInfo.IME_ACTION_DONE){
+                    etRemarks.clearFocus();
+                    InputMethodManager imm = (InputMethodManager) getActivity()
+                            .getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(getActivity().getWindow().getDecorView().getWindowToken(), 0);
+                    return true;
+                }
+                return false;
+            }
+        });
+
         return rootView;
     }
 
@@ -144,7 +169,7 @@ public class AddIncomeItemFragment extends Fragment implements View.OnClickListe
         linearLayout = rootView.findViewById(R.id.linear_layout_add_income_item);
         addItemReason = rootView.findViewById(R.id.tv_add_income_item_reason);
         btnTime = rootView.findViewById(R.id.btn_time);
-        btnRemark = rootView.findViewById(R.id.btn_remarks);
+        etRemarks = rootView.findViewById(R.id.et_remarks);
         accountEdit = rootView.findViewById(R.id.et_add_income_item_account);
         keyboardView = rootView.findViewById(R.id.keyBoard);
 
@@ -157,6 +182,8 @@ public class AddIncomeItemFragment extends Fragment implements View.OnClickListe
         btnInvestment.setOnClickListener(this);
         btnBusiness.setOnClickListener(this);
     }
+
+
 
     @Override
     public void onClick(View v) {
