@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -162,6 +163,7 @@ public abstract class HomeItemAdapter extends RecyclerView.Adapter<RecyclerView.
                     intent.putExtra("type",accountItem.getPrintType());
                     intent.putExtra("date",accountItem.getTagDate());
                     intent.putExtra("createTime", accountItem.getCreateTime());
+                    intent.putExtra("remarks",accountItem.getRemarks());
                     mActivity.startActivity(intent);
                     break;
                 case MENU_ITEM_DELETE:

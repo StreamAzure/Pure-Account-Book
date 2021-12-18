@@ -41,17 +41,18 @@ public class DataUtils {
         SQLiteOpenHelper sqLiteOpenHelper = new DatabaseHelper(context,dbName,null,dbVersion);
         SQLiteDatabase sqLiteDatabase = sqLiteOpenHelper.getReadableDatabase(); //只读
         //只有一张表item，收入和支出都在里面，以"type"列区分
-        Cursor cursor = sqLiteDatabase.query("item",new String[]{"createTime","reason","account","type","date","year","month","day"}, null,null,null,null,null);
+        Cursor cursor = sqLiteDatabase.query("item",new String[]{"createTime","reason","account","type","date","year","month","day","remarks"}, null,null,null,null,null);
         while(cursor.moveToNext()){
             int reason = cursor.getInt(cursor.getColumnIndexOrThrow("reason"));
             double account = cursor.getDouble(cursor.getColumnIndexOrThrow("account"));
             String date = cursor.getString(cursor.getColumnIndexOrThrow("date"));
             String createTime = cursor.getString(cursor.getColumnIndexOrThrow("createTime"));
+            String remarks = cursor.getString(cursor.getColumnIndexOrThrow("remarks"));
             try {
                 //new一个AccountItem
-                AccountItem accountItem = new AccountItem(reason,account,new CalendarUtils().StringToCalender(date),createTime);
+                AccountItem accountItem = new AccountItem(reason,account,new CalendarUtils().StringToCalender(date),createTime,remarks);
 //                Log.e("DataUtils","数据库数据："+accountItem.getTitle(context,reason)+" 金额："+accountItem.getAccount()+" "
-//                        +"Date:"+accountItem.getTagDate()+" CreateTime:"+createTime);
+//                        +"Date:"+accountItem.getTagDate()+" CreateTime:"+createTime+" remarks:"+remarks);
                 updateData(listTreeMap, accountItem);
                 //插入到TreeMap中
             } catch (ParseException e) {
@@ -73,7 +74,7 @@ public class DataUtils {
     }
 
     //插入一条账目数据
-    public void InsertItemData(int reason, double account, String date){
+    public void InsertItemData(int reason, double account, String date, String remarks){
         SQLiteOpenHelper sqLiteOpenHelper = new DatabaseHelper(context,dbName,null,dbVersion);
         SQLiteDatabase sqLiteDatabase = sqLiteOpenHelper.getWritableDatabase();
 
@@ -93,12 +94,13 @@ public class DataUtils {
         values.put("year",tmpTime[0]);
         values.put("month",tmpTime[1]);
         values.put("day",tmpTime[2]);
+        values.put("remarks",remarks);
 
         sqLiteDatabase.insert("item",null,values);
     }
 
     //更新一条账目数据
-    public void EditItemData(int reason, double account, String date, String createTime){
+    public void EditItemData(int reason, double account, String date, String createTime, String remarks){
         SQLiteOpenHelper sqLiteOpenHelper = new DatabaseHelper(context,dbName,null,dbVersion);
         SQLiteDatabase sqLiteDatabase = sqLiteOpenHelper.getWritableDatabase();
 
@@ -117,6 +119,7 @@ public class DataUtils {
         values.put("year",tmpTime[0]);
         values.put("month",tmpTime[1]);
         values.put("day",tmpTime[2]);
+        values.put("remarks",remarks);
 
         sqLiteDatabase.update("item", values, "createTime=?", new String[]{createTime});
         //字符串列表内的内容会依次替换whereClause参数里的问号
@@ -285,8 +288,9 @@ public class DataUtils {
             double account = cursor.getDouble(cursor.getColumnIndexOrThrow("account"));
             String date = cursor.getString(cursor.getColumnIndexOrThrow("date"));
             String createTime = cursor.getString(cursor.getColumnIndexOrThrow("createTime"));
+            String remarks = cursor.getString(cursor.getColumnIndexOrThrow("remarks"));
             try {
-                AccountItem accountItem = new AccountItem(reason,account,new CalendarUtils().StringToCalender(date),createTime);
+                AccountItem accountItem = new AccountItem(reason,account,new CalendarUtils().StringToCalender(date),createTime,remarks);
                 updateData(listTreeMap,accountItem);
             } catch (ParseException e) {
                 e.printStackTrace();

@@ -263,6 +263,7 @@ public class DayHistoryFragment extends Fragment {
                         intent.putExtra("type",accountItem.getPrintType());
                         intent.putExtra("date",accountItem.getTagDate());
                         intent.putExtra("createTime", accountItem.getCreateTime());
+                        intent.putExtra("remarks",accountItem.getRemarks());
                         startActivity(intent);
                         break;
                     case MENU_ITEM_DELETE:

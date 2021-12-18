@@ -46,6 +46,7 @@ public class ShowItemActivity extends AppCompatActivity {
         tvType = findViewById(R.id.type);
         tvDate = findViewById(R.id.date);
         tvCreateTime = findViewById(R.id.createtime);
+        tvRemarks = findViewById(R.id.tv_remarks);
 
         Intent intent = getIntent();
         tvAccount.setText(intent.getDoubleExtra("account",0.00)+"");
@@ -53,5 +54,9 @@ public class ShowItemActivity extends AppCompatActivity {
         tvType.setText(intent.getStringExtra("type"));
         tvDate.setText(intent.getStringExtra("date"));
         tvCreateTime.setText(intent.getStringExtra("createTime").substring(0,19));
+        if(intent.getStringExtra("remarks")==null){
+            tvRemarks.setText("暂无备注");
+        }
+        else tvRemarks.setText("备注\n\n\t\t\t\t"+ intent.getStringExtra("remarks"));
     }
 }

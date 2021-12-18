@@ -147,6 +147,7 @@ public class MonthHistoryFragment extends Fragment {
         lineDataSets.add(incomeDataSet);
 
         LineData lineData = new LineData(lineDataSets);
+        lineData.setDrawValues(false); //不显示纵坐标值
         lineChart.setData(lineData);
         lineChart.invalidate();
     }
@@ -183,13 +184,16 @@ public class MonthHistoryFragment extends Fragment {
         lineDataSets.add(incomeDataSet);
 
         LineData lineData = new LineData(lineDataSets);
+        lineData.setDrawValues(false); //不显示纵坐标值
         lineChart.setTouchEnabled(false);
         lineChart.getDescription().setEnabled(false);
         lineChart.getXAxis().setDrawGridLines(false);
         lineChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
+        lineChart.getXAxis().setLabelCount(ShowMonthDataList.size(), false); //让坐标按实际分布
+        lineChart.getXAxis().setLabelCount(8,true);//限制标签个数，否则会密密麻麻排满
         lineChart.getAxisRight().setEnabled(false);
+        lineChart.getAxisLeft().setEnabled(false);
         lineChart.getLegend().setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
-
         lineChart.setData(lineData);
         lineChart.invalidate();
     }

@@ -15,22 +15,24 @@ public class AccountItem extends HomeItem {
     private String createTime;//条目创建时间，24小时制，格式yyyy-MM-dd HH:mm:ss
     private String remarks;
 
-    public AccountItem(int reason, double account, int year,int month,int date) {
+    public AccountItem(int reason, double account, int year,int month,int date,String remarks) {
         this.icon = getIcon(reason);
         this.reason = reason;
         this.account = account;
         this.type = getType();
         this.date = Calendar.getInstance();
         this.date.set(year, month, date);
+        this.remarks = remarks;
     }
 
-    public AccountItem(int reason, double account,Calendar calendar, String createTime){
+    public AccountItem(int reason, double account,Calendar calendar, String createTime, String remarks){
         this.icon = getIcon(reason);
         this.reason = reason;
         this.account = account;
         this.type = getType();
         this.date = calendar;
         this.createTime = createTime;
+        this.remarks = remarks;
     }
 
     public String getTitle(Context context){

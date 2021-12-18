@@ -22,7 +22,7 @@ public class ShowYearData {
         this.month = month;
         this.expend = dataUtils.getMonthExpend(year,month);
         this.income = dataUtils.getMonthIncome(year,month);
-        Log.e("ShowYearData",this.expend+"");
+        //Log.e("ShowYearData",this.expend+"");
     }
 
     public int getMonth() {

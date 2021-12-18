@@ -111,7 +111,7 @@ public class YearHistoryFragment extends Fragment {
         //-------支出数据集-------
         List<BarEntry> expendEntries = new ArrayList<>();
         for(int i = 0;i <showYearDataList.size();i++){
-            expendEntries.add(new BarEntry(showYearDataList.get(i).getMonth(),
+            expendEntries.add(new BarEntry(i+1,
                     (float)showYearDataList.get(i).getExpend()));
         }
         BarDataSet expendDataSet = new BarDataSet(expendEntries,"月支出");
@@ -120,7 +120,7 @@ public class YearHistoryFragment extends Fragment {
         //-------收入数据集-------
         List<BarEntry> incomeEntries = new ArrayList<>();
         for(int i=0;i<showYearDataList.size();i++){
-            incomeEntries.add(new BarEntry(showYearDataList.get(i).getMonth(),
+            incomeEntries.add(new BarEntry(i+1,
                     (float)showYearDataList.get(i).getIncome()));
         }
         BarDataSet incomeDataSet = new BarDataSet(incomeEntries,"月收入");
@@ -132,8 +132,16 @@ public class YearHistoryFragment extends Fragment {
 
         BarData barData = new BarData(barDataSets);
         barChart.setData(barData);
-        barChart.getBarData().setBarWidth(0.45f);
-        barChart.groupBars(0, 0.04f/*组与组之间的距离*/, 0.03f/*组中每个柱子之间的距离*/);
+
+        float groupSpace = 0.04f;
+        float barSpace = 0.03f;
+        float barWidth = 0.45f;
+
+        barChart.getBarData().setBarWidth(barWidth);
+        barChart.getXAxis().setAxisMinimum(1);
+        barChart.getXAxis().setAxisMaximum(barChart.getBarData().getGroupWidth(groupSpace, barSpace) * 12 + 1);
+        barChart.groupBars(1, groupSpace/*组与组之间的距离*/, barSpace/*组中每个柱子之间的距离*/);
+        barChart.getXAxis().setCenterAxisLabels(true);
         barChart.invalidate();
     }
 
@@ -150,7 +158,7 @@ public class YearHistoryFragment extends Fragment {
         //-------支出数据集-------
         List<BarEntry> expendEntries = new ArrayList<>();
         for(int i = 0;i <showYearDataList.size();i++){
-            expendEntries.add(new BarEntry(showYearDataList.get(i).getMonth(),
+            expendEntries.add(new BarEntry(i+1,
                     (float)showYearDataList.get(i).getExpend()));
         }
         BarDataSet expendDataSet = new BarDataSet(expendEntries,"月支出");
@@ -158,8 +166,8 @@ public class YearHistoryFragment extends Fragment {
 
         //-------收入数据集-------
         List<BarEntry> incomeEntries = new ArrayList<>();
-        for(int i=0;i<showYearDataList.size();i++){
-            incomeEntries.add(new BarEntry(showYearDataList.get(i).getMonth(),
+        for(int i = 0;i < showYearDataList.size();i++){
+            incomeEntries.add(new BarEntry(i+1,
                     (float)showYearDataList.get(i).getIncome()));
         }
         BarDataSet incomeDataSet = new BarDataSet(incomeEntries,"月收入");
@@ -175,10 +183,21 @@ public class YearHistoryFragment extends Fragment {
         barChart.getDescription().setEnabled(false);
         barChart.getXAxis().setDrawGridLines(false);
         barChart.getAxisRight().setEnabled(false);//禁用右侧坐标轴
-        barChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
-        barChart.getBarData().setBarWidth(0.45f);
-        barChart.groupBars(0, 0.04f/*组与组之间的距离*/, 0.03f/*组中每个柱子之间的距离*/);
+        barChart.getAxisLeft().setEnabled(false);
         barChart.getLegend().setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
+        barChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
+
+        barChart.getXAxis().setLabelCount(12);
+
+        float groupSpace = 0.04f;
+        float barSpace = 0.03f;
+        float barWidth = 0.45f;
+
+        barChart.getBarData().setBarWidth(barWidth);
+        barChart.getXAxis().setAxisMinimum(1);
+        barChart.getXAxis().setAxisMaximum(barChart.getBarData().getGroupWidth(groupSpace, barSpace) * 12 + 1);
+        barChart.groupBars(1, groupSpace/*组与组之间的距离*/, barSpace/*组中每个柱子之间的距离*/);
+        barChart.getXAxis().setCenterAxisLabels(true);
 
         barChart.invalidate();
     }

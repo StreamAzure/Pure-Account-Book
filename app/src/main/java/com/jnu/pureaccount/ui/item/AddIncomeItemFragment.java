@@ -107,10 +107,10 @@ public class AddIncomeItemFragment extends Fragment implements View.OnClickListe
                 else {
                     DataUtils dataUtils = new DataUtils(getActivity());
                     if(operationTAG == OPERATION_ADD) {
-                        dataUtils.InsertItemData(selectItem, Double.parseDouble(accountEdit.getText().toString()), selectDate);
+                        dataUtils.InsertItemData(selectItem, Double.parseDouble(accountEdit.getText().toString()), selectDate,etRemarks.getText().toString());
                     }
                     else if(operationTAG == OPERATION_EDIT){
-                        dataUtils.EditItemData(selectItem,Double.parseDouble(accountEdit.getText().toString()),selectDate,createTime);
+                        dataUtils.EditItemData(selectItem,Double.parseDouble(accountEdit.getText().toString()),selectDate,createTime,etRemarks.getText().toString());
                     }
                     getActivity().finish();
                 }
