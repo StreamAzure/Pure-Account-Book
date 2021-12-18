@@ -162,6 +162,22 @@ public class AddIncomeItemFragment extends Fragment implements View.OnClickListe
             }
         });
 
+        //点击金额编辑框时收回系统软键盘，弹出自定义软键盘
+        accountEdit.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN){
+                    //etRemarks.requestFocus();
+                    InputMethodManager imm = (InputMethodManager) getActivity()
+                            .getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(getActivity().getWindow().getDecorView().getWindowToken(), 0);
+                    keyBoardUtils.showKeyboard();
+                    return false;
+                }
+                return false;
+            }
+        });
+
         return rootView;
     }
 
