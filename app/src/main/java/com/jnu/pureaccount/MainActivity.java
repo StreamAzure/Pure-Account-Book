@@ -1,42 +1,22 @@
 package com.jnu.pureaccount;
 
-import android.content.Intent;
-import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Menu;
 import android.view.WindowManager;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.widget.Toast;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
-import com.jnu.pureaccount.event.AddItemActivity;
 import com.jnu.pureaccount.ui.analysis.AnalysisFragment;
 import com.jnu.pureaccount.ui.history.HistoryFragment;
 import com.jnu.pureaccount.ui.home.HomeFragment;
-import com.jnu.pureaccount.ui.person.PersonFragment;
 import com.jnu.pureaccount.utils.AndroidBarUtils;
-import com.jnu.pureaccount.utils.DataUtils;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -47,7 +27,6 @@ public class MainActivity extends AppCompatActivity {
     private HomeFragment homeFragment;
     private HistoryFragment historyFragment;
     private AnalysisFragment analysisFragment;
-    private PersonFragment personFragment;
     private Toolbar toolbar;
 
     @Override
@@ -111,13 +90,6 @@ public class MainActivity extends AppCompatActivity {
                     }
                     toolbar.setTitle("分析统计");
                     initFragment(analysisFragment);
-                }
-                else if(item.getItemId() == R.id.nav_person){
-                    if(personFragment == null){
-                        personFragment = new PersonFragment();
-                    }
-                    toolbar.setTitle("个人中心");
-                    initFragment(personFragment);
                 }
                 //向左收回抽屉
                 drawerLayout.closeDrawer(Gravity.LEFT);

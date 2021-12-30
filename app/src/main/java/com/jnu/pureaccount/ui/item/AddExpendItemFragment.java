@@ -11,7 +11,6 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -31,7 +30,6 @@ import com.jnu.pureaccount.R;
 import com.jnu.pureaccount.utils.CalendarUtils;
 import com.jnu.pureaccount.utils.DataUtils;
 import com.jnu.pureaccount.utils.KeyBoardUtils;
-import com.jnu.pureaccount.utils.LogUtils;
 
 import java.util.HashMap;
 
